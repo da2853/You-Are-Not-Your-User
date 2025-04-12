@@ -147,71 +147,94 @@ document.addEventListener('DOMContentLoaded', () => {
     function initDashboard() {
         console.log('Initializing Dashboard');
         const applicationsList = document.getElementById('applications-list');
-        if (!applicationsList) return;
+        const loadingPlaceholder = applicationsList?.querySelector('.loading-placeholder');
+        const emptyMessage = document.getElementById('empty-applications-message');
+
+        if (!applicationsList || !emptyMessage || !loadingPlaceholder) {
+            console.error("Dashboard elements not found!");
+            return;
+        }
+
+        // Hide empty message initially, show loading
+        emptyMessage.style.display = 'none';
+        loadingPlaceholder.style.display = 'block';
+        applicationsList.innerHTML = ''; // Clear previous cards but keep placeholders conceptually separate
+        applicationsList.appendChild(loadingPlaceholder); // Re-add placeholder
 
         const applications = dataApi.loadApplications();
         // Sort applications by last update time (most recent first)
         applications.sort((a, b) => new Date(b.lastUpdated || 0) - new Date(a.lastUpdated || 0));
 
+        // Hide loading placeholder *after* loading data
+        loadingPlaceholder.style.display = 'none';
 
         if (applications.length === 0) {
-            applicationsList.innerHTML = '<p>You have no submitted applications yet. Start one using the button below!</p>';
+            emptyMessage.style.display = 'block'; // Show empty state message
+            console.log("No applications found.");
             return;
         }
 
-        applicationsList.innerHTML = ''; // Clear loading message
         applications.forEach(app => {
-            const item = document.createElement('div');
-            item.classList.add('application-item');
+            const card = document.createElement('div');
+            card.classList.add('application-card'); // Use this class for styling
 
             // Determine status and class dynamically
             const status = app.status || 'Unknown';
-            const statusClass = `status-${status.toLowerCase().replace(/ /g, '-')}`; // e.g., status-in-review
+            // Generate a CSS-friendly class name (lowercase, hyphenated)
+            const statusClass = `status-${status.toLowerCase().replace(/\s+/g, '-')}`;
 
-            item.innerHTML = `
-                <div class="application-info">
-                    <span><strong>Job:</strong> ${app.jobTitle || 'Unknown Job'}</span>
-                    <span><strong>Company:</strong> ${app.formData?.company || 'N/A'}</span>
-                    <span><strong>Submitted:</strong> ${app.submittedDate || 'N/A'}</span>
-                    <span><strong>Last Update:</strong> ${app.lastUpdated ? new Date(app.lastUpdated).toLocaleString() : 'N/A'}</span>
-                </div>
-                <div class="application-status">
-                     <span class="status ${statusClass}">${status}</span>
-                </div>
-                <div class="application-actions">
-                    <!-- Link to apply.html with the specific jobId for editing -->
-                    <a href="apply.html?jobId=${app.jobId}" class="btn btn-secondary btn-small">View/Edit</a>
-                    <!-- Add Withdraw/Delete simulation if needed -->
-                     <button type="button" class="btn btn-danger btn-small withdraw-btn" data-jobid="${app.jobId}" title="Simulate Withdraw/Delete">Withdraw</button>
+            // Format dates nicely
+            const submittedDate = app.submittedDate ? new Date(app.submittedDate).toLocaleDateString() : 'N/A';
+            const lastUpdatedDate = app.lastUpdated ? new Date(app.lastUpdated).toLocaleString() : 'N/A';
+
+            // Build the card's inner HTML
+            card.innerHTML = `
+                <div class="card-body">
+                    <div class="app-card-header">
+                        <h3 class="app-title">${app.jobTitle || 'Unknown Job'}</h3>
+                        <span class="app-company">${app.formData?.company || 'N/A'}</span>
+                    </div>
+                    <div class="app-card-details">
+                        <div class="app-status">
+                            <span class="label">Status:</span>
+                            <span class="status-badge ${statusClass}">${status}</span>
+                        </div>
+                        <div class="app-dates">
+                            <span class="label">Applied:</span> ${submittedDate} <br>
+                            <span class="label">Updated:</span> ${lastUpdatedDate}
+                        </div>
+                    </div>
+                    <div class="app-card-actions">
+                        <a href="apply.html?jobId=${app.jobId}" class="btn btn-secondary btn-small">View/Edit</a>
+                        <button type="button" class="btn btn-danger btn-small withdraw-btn" data-jobid="${app.jobId}" title="Simulate Withdraw/Delete">Withdraw</button>
+                    </div>
                 </div>
             `;
-            applicationsList.appendChild(item);
+            applicationsList.appendChild(card);
         });
 
-         // Add event listeners for Withdraw buttons (simulation)
+         // Add event listeners for Withdraw buttons (simulation) - Logic remains the same
         applicationsList.querySelectorAll('.withdraw-btn').forEach(button => {
             button.addEventListener('click', (e) => {
                 const jobId = e.target.dataset.jobid;
-                if (confirm(`Simulate withdrawing/deleting application for Job ID ${jobId}? This cannot be undone in the prototype.`)) {
-                    // Find app and update status or remove
+                const appTitle = e.target.closest('.application-card')?.querySelector('.app-title')?.textContent || `Job ID ${jobId}`; // Get title for confirm message
+                if (confirm(`Simulate withdrawing/deleting application for "${appTitle}"? This cannot be undone in the prototype.`)) {
                     const apps = dataApi.loadApplications();
                     const appIndex = apps.findIndex(a => a.jobId === jobId);
                     if (appIndex > -1) {
-                        // Option 1: Change status to Withdrawn
-                        // apps[appIndex].status = 'Withdrawn';
-                        // apps[appIndex].lastUpdated = new Date().toISOString();
-                        // dataApi.saveApplications(apps);
-
-                        // Option 2: Remove completely (more permanent)
+                        // Remove completely
                         apps.splice(appIndex, 1);
                         dataApi.saveApplications(apps);
+                        dataApi.clearCurrentApplicationProgress(jobId); // Clear auto-save too
 
-                        // Remove auto-save for this job too
-                        dataApi.clearCurrentApplicationProgress(jobId);
-
-                        // Re-render the list
-                        initDashboard();
-                        alert(`Application ${jobId} withdrawn/deleted (simulated).`);
+                        // Re-render the list *immediately* for responsiveness
+                        initDashboard(); // Re-initialize the dashboard view
+                        // Optionally show a status message if you have a dedicated area
+                        // showStatusMessage('dashboard-status', `Application "${appTitle}" withdrawn/deleted.`, 'success');
+                        alert(`Application "${appTitle}" withdrawn/deleted (simulated).`); // Simple alert fallback
+                    } else {
+                         console.warn(`Application with ID ${jobId} not found for withdrawal.`);
+                         alert(`Error: Could not find application ${jobId} to withdraw.`);
                     }
                 }
             });

@@ -5,48 +5,111 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Job Application Dashboard</title>
     <link rel="stylesheet" href="css/style.css">
+    <!-- Optional: Add icon library like Font Awesome if desired for buttons -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> -->
 </head>
 <body>
-    <header>
-        <h1>My Job Application Dashboard</h1>
-        <nav>
-            <a href="dashboard.html" class="active">Dashboard</a>
-            <a href="profile.html">My Profile</a>
-            <!-- Link to apply.html with 'new=true' to start fresh -->
-            <a href="apply.html?new=true" class="btn btn-light btn-small" style="color: var(--primary-color);">Apply for New Job</a>
-        </nav>
+    <header class="dashboard-header">
+        <div class="container header-container">
+            <h1>My Job Dashboard</h1>
+            <nav>
+                <a href="dashboard.html" class="nav-link active">Dashboard</a>
+                <a href="profile.html" class="nav-link">My Profile</a>
+                <a href="apply.html?new=true" class="btn btn-primary btn-small">Apply for New Job</a>
+            </nav>
+        </div>
     </header>
 
-    <main class="container dashboard-container">
-        <section id="active-applications">
-            <h2>Active Applications</h2>
-            <div id="applications-list">
-                <!-- Applications will be loaded here by JavaScript -->
-                <p>Loading applications...</p>
+    <main class="container dashboard-grid">
+
+        <!-- Main Content Area (Applications) -->
+        <section id="active-applications" class="dashboard-section main-section card">
+            <div class="card-header">
+                <h2>Active Applications</h2>
+                <a href="apply.html?new=true" class="btn btn-secondary btn-small">Start New Application</a>
             </div>
-             <a href="apply.html?new=true" class="btn btn-primary" style="margin-top: 1rem;">Start a New Application</a>
+            <div class="card-body">
+                <div id="applications-list">
+                    <!-- Applications will be loaded here by JavaScript -->
+                    <p class="loading-placeholder">Loading applications...</p>
+                     <!-- Empty state message will be shown here if no apps -->
+                     <div id="empty-applications-message" style="display: none; text-align: center; padding: 2rem;">
+                         <p>You haven't submitted any applications yet.</p>
+                         <a href="apply.html?new=true" class="btn btn-primary" style="margin-top: 1rem;">Start Your First Application</a>
+                     </div>
+                </div>
+            </div>
         </section>
 
-        <!-- Static Demo Sections -->
-        <section id="recommended-jobs">
-            <h2>Recommended Jobs (Demo Feature)</h2>
-            <ul>
-                <li>Software Engineer - Tech Corp (90% Match)</li>
-                <li>UX Designer - Creative Solutions (85% Match)</li>
-                <li>Product Manager - Innovate Inc (80% Match)</li>
-            </ul>
-            <p class="text-muted"><small>Job recommendations are static for this prototype demonstration.</small></p>
-        </section>
+        <!-- Sidebar Area (Recommendations, Tasks, Analytics) -->
+        <aside class="sidebar">
+            <section id="recommended-jobs" class="dashboard-section card">
+                 <div class="card-header">
+                    <h2>Recommended Jobs</h2>
+                 </div>
+                 <div class="card-body">
+                    <ul class="compact-list">
+                        <li>Software Engineer - Tech Corp <span class="match-badge high">90% Match</span></li>
+                        <li>UX Designer - Creative Solutions <span class="match-badge medium">85% Match</span></li>
+                        <li>Product Manager - Innovate Inc <span class="match-badge medium">80% Match</span></li>
+                    </ul>
+                    <p class="text-muted"><small>Job recommendations are static demo data.</small></p>
+                 </div>
+            </section>
 
-        <section id="upcoming-tasks">
-            <h2>Upcoming Tasks (Demo Feature)</h2>
-            <ul>
-                <li>Interview Prep - Software Engineer @ Tech Corp (Tomorrow)</li>
-                <li>Submit Assessment - UX Designer @ Creative Solutions (Due in 3 Days)</li>
-                 <li>Follow Up - Product Manager @ Innovate Inc (Next week)</li>
-            </ul>
-             <p class="text-muted"><small>Upcoming tasks are static for this prototype demonstration.</small></p>
-        </section>
+            <section id="upcoming-tasks" class="dashboard-section card">
+                 <div class="card-header">
+                     <h2>Upcoming Tasks</h2>
+                 </div>
+                 <div class="card-body">
+                    <ul class="compact-list task-list">
+                        <li>
+                            <span class="task-title">Interview Prep - SE @ Tech Corp</span>
+                            <span class="task-due">Tomorrow</span>
+                        </li>
+                        <li>
+                             <span class="task-title">Submit Assessment - UXD @ Creative Solutions</span>
+                            <span class="task-due">Due in 3 Days</span>
+                        </li>
+                         <li>
+                             <span class="task-title">Follow Up - PM @ Innovate Inc</span>
+                            <span class="task-due">Next week</span>
+                        </li>
+                    </ul>
+                     <p class="text-muted"><small>Upcoming tasks are static demo data.</small></p>
+                 </div>
+            </section>
+
+             <section id="application-analytics" class="dashboard-section card">
+                 <div class="card-header">
+                     <h2>Application Analytics</h2>
+                 </div>
+                 <div class="card-body analytics-grid">
+                     <div class="analytic-item">
+                         <span class="analytic-value">15</span>
+                         <span class="analytic-label">Total Apps</span>
+                         <small class="text-muted">+10% vs last month</small>
+                     </div>
+                      <div class="analytic-item">
+                         <span class="analytic-value">8</span>
+                         <span class="analytic-label">Interviews</span>
+                         <small class="text-muted">+15% vs last month</small>
+                     </div>
+                     <div class="analytic-item">
+                         <span class="analytic-value">53%</span>
+                         <span class="analytic-label">Interview Rate</span>
+                          <small class="text-muted">-2% vs last month</small>
+                     </div>
+                      <div class="analytic-item">
+                         <span class="analytic-value">2</span>
+                         <span class="analytic-label">Offers Received</span>
+                         <small class="text-muted">+100% vs last month</small>
+                     </div>
+                 </div>
+                  <p class="text-muted" style="margin-top: 0.5rem;"><small>Analytics are static demo data.</small></p>
+            </section>
+        </aside>
+
     </main>
 
     <footer>
@@ -56,5 +119,44 @@
     <!-- Load Scripts -->
     <script src="js/data.js"></script>
     <script src="js/main.js"></script>
+    <script>
+        // Add a small script to ensure the empty state message is handled correctly on initial load
+        document.addEventListener('DOMContentLoaded', () => {
+            const appList = document.getElementById('applications-list');
+            const loadingMsg = appList.querySelector('.loading-placeholder');
+            const emptyMsg = document.getElementById('empty-applications-message');
+
+            // Hide loading and show empty message if JS fails to populate or after population if empty
+            const observer = new MutationObserver(mutations => {
+                 // Check if only the placeholder or empty message are children (or if it's truly empty)
+                const hasContent = Array.from(appList.children).some(child =>
+                    child.classList.contains('application-card')
+                );
+                const isLoading = loadingMsg && loadingMsg.style.display !== 'none';
+
+                if (!hasContent && !isLoading) {
+                    if(loadingMsg) loadingMsg.style.display = 'none';
+                    if(emptyMsg) emptyMsg.style.display = 'block';
+                } else {
+                     if(loadingMsg) loadingMsg.style.display = 'none';
+                     if(emptyMsg) emptyMsg.style.display = 'none';
+                }
+            });
+
+            observer.observe(appList, { childList: true });
+
+             // Initial check in case JS loads apps very fast or very slow
+             setTimeout(() => {
+                 const hasContent = Array.from(appList.children).some(child =>
+                    child.classList.contains('application-card')
+                 );
+                 const isLoading = loadingMsg && loadingMsg.style.display !== 'none';
+                  if (!hasContent && !isLoading) {
+                       if(loadingMsg) loadingMsg.style.display = 'none';
+                       if(emptyMsg) emptyMsg.style.display = 'block';
+                   }
+             }, 50); 
+        });
+    </script>
 </body>
 </html>
