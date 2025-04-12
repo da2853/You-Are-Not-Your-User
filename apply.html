@@ -3,183 +3,248 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Title will be set by JS -->
     <title>Apply for Job</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <header>
-        <h1 id="application-title">Apply for Job Title</h1> <!-- Title updated by JS -->
+        <!-- Title will be set by JS -->
+        <h1 id="application-header-title">Loading Application...</h1>
          <nav>
             <a href="dashboard.html">Dashboard</a>
             <a href="profile.html">My Profile</a>
-            <a href="apply.html?new=true">Apply for New Job</a>
+            <!-- Active link logic might be tricky here, maybe omit for simplicity -->
         </nav>
     </header>
 
     <main class="container application-container">
+        <h2 id="application-title">Applying for: [Job Title Here]</h2> <!-- JS will update this -->
+
+        <!-- Progress Bar -->
         <div class="progress-container">
-            <label>Application Progress</label>
-            <progress id="application-progress" value="0" max="100"></progress>
+             <label for="application-progress">Application Progress</label>
+             <progress id="application-progress" value="0" max="100"></progress>
+             <p id="auto-save-status" class="status-message" style="text-align: right; margin-top: 0.2rem;"></p>
         </div>
 
-        <p id="auto-save-status" class="status-message"></p>
+        <!-- Validation Summary -->
+        <div id="validation-summary" role="alert"></div>
 
-        <form id="application-form">
+        <form id="application-form" novalidate> <!-- novalidate prevents default browser validation popups -->
 
-            <!-- Card: Personal Information -->
-            <div class="card required" data-section="personal">
-                <div class="card-header">
-                    <h3>Personal Information <span class="required-indicator">*</span></h3>
-                    <button type="button" class="toggle-card">-</button>
+            <!-- Card: Personal Information (Required) -->
+            <div class="card required" data-section="personal-info">
+                <div class="card-header" tabindex="0" role="button" aria-expanded="true" aria-controls="content-personal-info">
+                    <div class="card-header-title">
+                        <h3>Personal Information</h3>
+                        <span class="required-indicator">(Required)</span>
+                    </div>
+                    <button type="button" class="toggle-card" aria-label="Toggle Personal Information Section">-</button>
                 </div>
-                <div class="card-content">
+                <div id="content-personal-info" class="card-content">
+                    <p class="text-muted" style="margin-bottom: 1rem;"><small>This information is pre-filled from your profile. Please review and update if necessary for this specific application.</small></p>
                     <div class="form-group">
-                        <label for="app-name">Full Name</label>
+                        <label for="app-name" class="required">Full Name</label>
                         <input type="text" id="app-name" name="name" required>
                     </div>
                     <div class="form-group">
-                        <label for="app-email">Email</label>
+                        <label for="app-email" class="required">Email</label>
                         <input type="email" id="app-email" name="email" required>
                     </div>
                     <div class="form-group">
                         <label for="app-phone">Phone</label>
                         <input type="tel" id="app-phone" name="phone">
                     </div>
-                     <div class="form-group">
-                        <label for="app-location">Location</label>
+                    <div class="form-group">
+                        <label for="app-location">Location (City, State)</label>
                         <input type="text" id="app-location" name="location">
                     </div>
                 </div>
             </div>
 
-            <!-- Card: Work Experience -->
-            <div class="card required" data-section="experience">
-                 <div class="card-header">
-                    <h3>Work Experience <span class="required-indicator">*</span></h3>
-                     <button type="button" class="toggle-card">-</button>
-                </div>
-                 <div class="card-content">
-                    <div id="app-work-experience-list">
-                        <!-- Filled from profile or added -->
+             <!-- Card: Work Experience (Required - Example) -->
+            <div class="card required" data-section="work-experience">
+                <div class="card-header" tabindex="0" role="button" aria-expanded="true" aria-controls="content-work-experience">
+                     <div class="card-header-title">
+                        <h3>Work Experience</h3>
+                         <span class="required-indicator">(Required)</span>
                     </div>
-                     <p><small>Information pulled from your profile. Review or add specific details.</small></p>
-                      <button type="button" class="btn btn-secondary btn-small add-app-experience-btn">Add Experience for this Application</button>
-                 </div>
+                    <button type="button" class="toggle-card" aria-label="Toggle Work Experience Section">-</button>
+                </div>
+                <div id="content-work-experience" class="card-content">
+                     <p class="text-muted" style="margin-bottom: 1rem;"><small>Review your work history. Add, remove, or edit entries as needed for this role. At least one entry is required.</small></p>
+                    <div id="app-work-experience-list" class="dynamic-list-container">
+                        <!-- App-specific Work experience items will be loaded/added here -->
+                        <p class="text-muted">Loading experience...</p>
+                    </div>
+                    <button type="button" class="btn btn-secondary btn-small add-app-experience-btn">Add Experience</button>
+                </div>
             </div>
 
-            <!-- Card: Education -->
-             <div class="card required" data-section="education">
-                 <div class="card-header">
-                    <h3>Education <span class="required-indicator">*</span></h3>
-                      <button type="button" class="toggle-card">-</button>
+            <!-- Card: Education (Optional - Example) -->
+            <div class="card optional" data-section="education">
+                <div class="card-header" tabindex="0" role="button" aria-expanded="true" aria-controls="content-education">
+                     <div class="card-header-title">
+                        <h3>Education</h3>
+                        <!-- No required indicator -->
+                    </div>
+                    <button type="button" class="toggle-card" aria-label="Toggle Education Section">-</button>
                 </div>
-                 <div class="card-content">
-                     <div id="app-education-list">
-                        <!-- Filled from profile or added -->
-                     </div>
-                     <p><small>Information pulled from your profile. Review or add specific details.</small></p>
-                      <button type="button" class="btn btn-secondary btn-small add-app-education-btn">Add Education for this Application</button>
-                 </div>
+                <div id="content-education" class="card-content">
+                     <p class="text-muted" style="margin-bottom: 1rem;"><small>Include relevant education. Add or remove entries as needed.</small></p>
+                    <div id="app-education-list" class="dynamic-list-container">
+                        <!-- App-specific Education items will be loaded/added here -->
+                         <p class="text-muted">Loading education...</p>
+                    </div>
+                    <button type="button" class="btn btn-secondary btn-small add-app-education-btn">Add Education</button>
+                </div>
             </div>
 
-             <!-- Card: Skills -->
-             <div class="card optional" data-section="skills">
-                 <div class="card-header">
-                    <h3>Skills</h3>
-                      <button type="button" class="toggle-card">-</button>
+             <!-- Card: Skills (Optional) -->
+            <div class="card optional" data-section="skills">
+                <div class="card-header" tabindex="0" role="button" aria-expanded="true" aria-controls="content-skills">
+                     <div class="card-header-title">
+                        <h3>Skills</h3>
+                    </div>
+                    <button type="button" class="toggle-card" aria-label="Toggle Skills Section">-</button>
                 </div>
-                 <div class="card-content">
-                     <div class="form-group">
+                <div id="content-skills" class="card-content">
+                    <div class="form-group">
                         <label for="app-skills">Relevant Skills</label>
-                        <textarea id="app-skills" name="skills" rows="3"></textarea>
-                        <small class="contextual-hint">Tailor skills to match the job description. Pulled from profile.</small>
+                        <textarea id="app-skills" name="skills" rows="4" placeholder="Highlight skills most relevant to this job description, separated by commas"></textarea>
+                         <small class="text-muted">Pre-filled from profile. Tailor this list for the specific job.</small>
+                         <div class="contextual-hint">
+                            <strong>Hint:</strong> Check the job description for keywords and ensure they are reflected here if applicable.
+                         </div>
                     </div>
-                 </div>
-             </div>
-
-            <!-- Card: Documents -->
-             <div class="card required" data-section="documents">
-                 <div class="card-header">
-                    <h3>Documents <span class="required-indicator">*</span></h3>
-                      <button type="button" class="toggle-card">-</button>
                 </div>
-                 <div class="card-content">
-                    <p>Select documents from your locker for this application:</p>
-                    <div id="app-document-list">
-                        <!-- Documents from locker appear here as checkboxes -->
-                        <p>No documents found in locker. Please <a href="profile.html">upload documents</a> to your profile.</p>
-                    </div>
-                    <div class="form-group">
-                        <label for="app-cover-letter">Cover Letter (Optional Text)</label>
-                        <textarea id="app-cover-letter" name="coverLetter" rows="5"></textarea>
-                         <small class="contextual-hint">Briefly explain why you're a good fit for this specific role.</small>
-                    </div>
-                 </div>
             </div>
 
-            <!-- Card: Additional Questions (Optional) -->
-            <div class="card optional" data-section="questions">
-                <div class="card-header">
-                    <h3>Additional Questions</h3>
-                    <button type="button" class="toggle-card">-</button>
+             <!-- Card: Documents (Required - Example: Assume Resume is needed) -->
+            <div class="card required" data-section="documents">
+                <div class="card-header" tabindex="0" role="button" aria-expanded="true" aria-controls="content-documents">
+                     <div class="card-header-title">
+                        <h3>Attach Documents</h3>
+                         <span class="required-indicator">(Required)</span>
+                    </div>
+                    <button type="button" class="toggle-card" aria-label="Toggle Documents Section">-</button>
                 </div>
-                <div class="card-content">
-                    <div class="form-group">
-                        <label for="app-q-salary">Desired Salary (Optional)</label>
-                        <input type="text" id="app-q-salary" name="desiredSalary">
+                <div id="content-documents" class="card-content">
+                     <p class="text-muted" style="margin-bottom: 1rem;"><small>Select documents from your locker to attach to this application. At least one document (e.g., Resume) is typically required.</small></p>
+                     <div id="app-document-list">
+                         <!-- Document selection checkboxes will be loaded here -->
+                         <p class="text-muted">Loading documents from locker...</p>
+                     </div>
+                     <p style="margin-top: 1rem;"><small>Need to add or manage documents? Go to <a href="profile.html#document-locker" target="_blank">My Profile > Document Locker</a>.</small></p>
+                     <div class="contextual-hint">
+                         <strong>Tip:</strong> Always attach a resume. Consider a tailored cover letter if the option is available or required.
+                     </div>
+                </div>
+            </div>
+
+            <!-- Card: Cover Letter (Optional) -->
+            <div class="card optional" data-section="cover-letter">
+                <div class="card-header" tabindex="0" role="button" aria-expanded="true" aria-controls="content-cover-letter">
+                     <div class="card-header-title">
+                        <h3>Cover Letter</h3>
                     </div>
+                    <button type="button" class="toggle-card" aria-label="Toggle Cover Letter Section">-</button>
+                </div>
+                <div id="content-cover-letter" class="card-content">
                     <div class="form-group">
-                        <label for="app-q-startdate">Earliest Start Date (Optional)</label>
-                        <input type="date" id="app-q-startdate" name="startDate">
+                        <label for="app-cover-letter">Paste Cover Letter (Optional)</label>
+                        <textarea id="app-cover-letter" name="coverLetter" rows="8" placeholder="You can paste your cover letter text here, or attach it as a document if preferred."></textarea>
+                         <div class="contextual-hint">
+                             <strong>Suggestion:</strong> Briefly explain why you're a great fit for this specific role and company. Address it to the hiring manager if possible.
+                         </div>
                     </div>
+                </div>
+            </div>
+
+            <!-- Card: Additional Questions (Could be Required/Optional based on job) -->
+             <div class="card optional" data-section="questions">
+                <div class="card-header" tabindex="0" role="button" aria-expanded="true" aria-controls="content-questions">
+                     <div class="card-header-title">
+                        <h3>Additional Questions</h3>
+                        <!-- <span class="required-indicator">(Required)</span> Example if required -->
+                    </div>
+                    <button type="button" class="toggle-card" aria-label="Toggle Additional Questions Section">-</button>
+                </div>
+                <div id="content-questions" class="card-content">
+                     <p class="text-muted" style="margin-bottom: 1rem;"><small>Please answer any additional questions below.</small></p>
                      <div class="form-group">
+                        <label for="app-q-salary">Desired Salary (Optional)</label>
+                        <input type="text" id="app-q-salary" name="desiredSalary" placeholder="e.g., 80,000 USD or Negotiable">
+                     </div>
+                     <div class="form-group">
+                         <label for="app-q-startdate">Earliest Start Date (Optional)</label>
+                         <input type="date" id="app-q-startdate" name="startDate">
+                     </div>
+                      <div class="form-group">
                         <label for="app-q-referral">How did you hear about this position? (Optional)</label>
                         <input type="text" id="app-q-referral" name="referralSource">
-                         <small class="contextual-hint">e.g., LinkedIn, Company Website, Employee Referral</small>
                     </div>
+                     <!-- Add more simulated questions as needed -->
                 </div>
             </div>
 
-             <!-- Card: Review & Submit -->
-            <div class="card required" data-section="review">
-                 <div class="card-header">
-                    <h3>Review & Submit <span class="required-indicator">*</span></h3>
-                      <button type="button" class="toggle-card">-</button>
-                </div>
-                 <div class="card-content">
-                    <p>Please review all sections before submitting.</p>
-                    <div id="validation-summary" class="error-message"></div>
-                    <button type="submit" id="submit-application-btn" class="btn btn-primary btn-large">Submit Application</button>
-                 </div>
+            <!-- Submit Button -->
+            <div style="margin-top: 2.5rem; text-align: center; border-top: 1px solid #eee; padding-top: 1.5rem;">
+                <button type="submit" id="submit-application-btn" class="btn btn-success btn-large">Submit Application</button>
+                <p style="margin-top: 1rem;"><small class="text-muted">You can save progress by leaving the page (auto-save is enabled) and return later via the Dashboard.</small></p>
             </div>
 
         </form>
+
     </main>
 
     <footer>
         <p>Team Project - Final Prototype</p>
     </footer>
 
-    <!-- Templates for dynamic content -->
-    <template id="work-experience-template">
-        <div class="experience-item form-group">
-            <input type="text" name="jobTitle" placeholder="Job Title" required>
-            <input type="text" name="company" placeholder="Company" required>
-            <input type="text" name="duration" placeholder="Dates (e.g., Jan 2020 - Present)">
-            <textarea name="description" rows="2" placeholder="Brief description"></textarea>
-            <button type="button" class="btn btn-danger btn-small remove-item-btn">Remove</button>
+    <!-- TEMPLATES for Dynamic Lists (Can be reused from profile if identical) -->
+     <template id="work-experience-template">
+        <div class="experience-item">
+            <button type="button" class="btn btn-danger btn-small remove-item-btn" title="Remove Experience">&times;</button>
+            <div class="form-group">
+                <label for="jobTitle" class="required">Job Title</label>
+                <input type="text" name="jobTitle" required>
+            </div>
+            <div class="form-group">
+                <label for="company" class="required">Company</label>
+                <input type="text" name="company" required>
+            </div>
+            <div class="form-group">
+                <label for="duration">Duration</label>
+                <input type="text" name="duration" placeholder="e.g., Jan 2021 - Present">
+            </div>
+            <div class="form-group">
+                <label for="description">Description / Responsibilities</label>
+                <textarea name="description" rows="3" placeholder="Key responsibilities/achievements relevant to this application"></textarea>
+            </div>
         </div>
     </template>
 
     <template id="education-template">
-         <div class="education-item form-group">
-            <input type="text" name="institution" placeholder="Institution" required>
-            <input type="text" name="degree" placeholder="Degree/Field of Study" required>
-            <input type="text" name="eduDuration" placeholder="Dates Attended (e.g., 2016 - 2020)">
-             <button type="button" class="btn btn-danger btn-small remove-item-btn">Remove</button>
+        <div class="education-item">
+             <button type="button" class="btn btn-danger btn-small remove-item-btn" title="Remove Education">&times;</button>
+             <div class="form-group">
+                <label for="institution" class="required">Institution</label>
+                <input type="text" name="institution" required>
+            </div>
+            <div class="form-group">
+                <label for="degree">Degree / Field of Study</label>
+                <input type="text" name="degree">
+            </div>
+            <div class="form-group">
+                <label for="eduDuration">Duration / Graduation Date</label>
+                <input type="text" name="eduDuration">
+            </div>
         </div>
     </template>
 
+    <!-- Load Scripts -->
     <script src="js/data.js"></script>
     <script src="js/main.js"></script>
 </body>

@@ -12,78 +12,96 @@
          <nav>
             <a href="dashboard.html">Dashboard</a>
             <a href="profile.html" class="active">My Profile</a>
-            <a href="apply.html?new=true">Apply for New Job</a>
+            <a href="apply.html?new=true" class="btn btn-light btn-small" style="color: var(--primary-color);">Apply for New Job</a>
         </nav>
     </header>
 
     <main class="container profile-container">
         <form id="profile-form">
-            <h2>Personal Information</h2>
-            <div class="form-group">
-                <label for="profile-name">Full Name</label>
-                <input type="text" id="profile-name" name="name">
-            </div>
-            <div class="form-group">
-                <label for="profile-email">Email</label>
-                <input type="email" id="profile-email" name="email">
-            </div>
-            <div class="form-group">
-                <label for="profile-phone">Phone</label>
-                <input type="tel" id="profile-phone" name="phone">
-            </div>
-             <div class="form-group">
-                <label for="profile-location">Location (City, State)</label>
-                <input type="text" id="profile-location" name="location">
-            </div>
+            <!-- Section for Personal Information -->
+            <section>
+                <h2>Personal Information</h2>
+                <div class="form-group">
+                    <label for="profile-name" class="required">Full Name</label>
+                    <input type="text" id="profile-name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="profile-email" class="required">Email</label>
+                    <input type="email" id="profile-email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="profile-phone">Phone</label>
+                    <input type="tel" id="profile-phone" name="phone" placeholder="e.g., 555-123-4567">
+                </div>
+                <div class="form-group">
+                    <label for="profile-location">Location (City, State)</label>
+                    <input type="text" id="profile-location" name="location" placeholder="e.g., Anytown, CA">
+                </div>
+            </section>
 
-            <h2>Work Experience</h2>
-            <div id="work-experience-list">
-                <!-- Work experience items will be loaded/added here -->
-            </div>
-            <button type="button" id="add-experience-btn" class="btn btn-secondary btn-small">Add Experience</button>
+            <!-- Section for Work Experience -->
+            <section>
+                <h2>Work Experience</h2>
+                <div id="work-experience-list" class="dynamic-list-container">
+                    <!-- Work experience items will be loaded/added here -->
+                    <p class="text-muted">No work experience added yet.</p>
+                </div>
+                <button type="button" id="add-experience-btn" class="btn btn-secondary btn-small">Add Experience</button>
+            </section>
 
-            <h2>Education</h2>
-             <div id="education-list">
-                <!-- Education items will be loaded/added here -->
-            </div>
-            <button type="button" id="add-education-btn" class="btn btn-secondary btn-small">Add Education</button>
+            <!-- Section for Education -->
+            <section>
+                <h2>Education</h2>
+                 <div id="education-list" class="dynamic-list-container">
+                    <!-- Education items will be loaded/added here -->
+                     <p class="text-muted">No education added yet.</p>
+                </div>
+                <button type="button" id="add-education-btn" class="btn btn-secondary btn-small">Add Education</button>
+            </section>
 
-            <h2>Skills</h2>
-            <div class="form-group">
-                <label for="profile-skills">Skills (comma-separated)</label>
-                <textarea id="profile-skills" name="skills" rows="3"></textarea>
-                <small>e.g., JavaScript, Project Management, UX Design</small>
-            </div>
+            <!-- Section for Skills -->
+            <section>
+                <h2>Skills</h2>
+                <div class="form-group">
+                    <label for="profile-skills">Skills</label>
+                    <textarea id="profile-skills" name="skills" rows="4" placeholder="Enter skills relevant to your job search, separated by commas"></textarea>
+                    <small class="text-muted">e.g., JavaScript, Project Management, UX Design, Figma, Data Analysis, Python</small>
+                </div>
+            </section>
 
-            <button type="submit" class="btn btn-primary">Save Profile</button>
-            <p id="profile-save-status" class="status-message"></p>
+            <!-- Save Button and Status -->
+             <div style="margin-top: 2rem; border-top: 1px solid #eee; padding-top: 1.5rem;">
+                <button type="submit" class="btn btn-primary btn-large">Save Profile</button>
+                <p id="profile-save-status" class="status-message"></p>
+             </div>
         </form>
 
+        <!-- Section for Resume Management -->
         <section id="resume-management">
-            <h2>Resume Management</h2>
-             <div class="form-group">
-                <label for="resume-upload">Upload Resume (Simulated)</label>
-                <input type="file" id="resume-upload-input" accept=".pdf,.doc,.docx" style="display: none;">
-                <button type="button" id="resume-upload-btn" class="btn btn-secondary">Choose File</button>
-                <span id="resume-file-name">No file chosen</span>
+            <h2>Resume Management (Simulated)</h2>
+            <p class="text-muted" style="margin-bottom: 1rem;">Upload a resume to quickly pre-fill parts of your profile. This is a simulation only.</p>
+             <div class="form-group file-input-group">
+                <input type="file" id="resume-upload-input" accept=".pdf,.doc,.docx" class="hidden"> <!-- Hidden input -->
+                <button type="button" id="resume-upload-btn" class="btn btn-secondary">Choose Resume File</button>
+                <span id="resume-file-name" class="file-name-display">No file chosen</span>
              </div>
-            <button type="button" id="parse-resume-btn" class="btn btn-primary">Parse Resume & Pre-fill Profile</button>
-            <p><small>Clicking "Parse Resume" will simulate parsing and pre-fill some fields above with dummy data.</small></p>
+            <button type="button" id="parse-resume-btn" class="btn btn-info">Parse Resume & Pre-fill Profile</button>
             <p id="parse-status" class="status-message"></p>
         </section>
 
+        <!-- Section for Document Locker -->
         <section id="document-locker">
             <h2>Document Locker</h2>
+            <p class="text-muted" style="margin-bottom: 1rem;">Store frequently used documents like resumes, cover letter templates, or certificates here. They can be attached to applications.</p>
             <ul id="document-list">
                 <!-- Documents will be listed here -->
-                <li>No documents uploaded yet.</li>
+                <li>Loading documents...</li>
             </ul>
-             <div class="form-group">
-                 <label for="doc-upload">Upload Document (Simulated)</label>
-                 <input type="file" id="doc-upload-input" accept=".pdf,.doc,.docx,.jpg,.png" style="display: none;">
-                 <button type="button" id="doc-upload-btn" class="btn btn-secondary">Choose File</button>
-                 <span id="doc-file-name">No file chosen</span>
-                 <button type="button" id="add-doc-btn" class="btn btn-primary btn-small">Add to Locker</button>
+             <div class="form-group file-input-group">
+                 <input type="file" id="doc-upload-input" accept=".pdf,.doc,.docx,.jpg,.png,.txt" class="hidden"> <!-- Hidden input -->
+                 <button type="button" id="doc-upload-btn" class="btn btn-secondary">Choose Document</button>
+                 <span id="doc-file-name" class="file-name-display">No file chosen</span>
+                 <button type="button" id="add-doc-btn" class="btn btn-success btn-small">Add to Locker</button>
              </div>
               <p id="doc-upload-status" class="status-message"></p>
         </section>
@@ -94,6 +112,48 @@
         <p>Team Project - Final Prototype</p>
     </footer>
 
+    <!-- TEMPLATES for Dynamic Lists -->
+    <template id="work-experience-template">
+        <div class="experience-item">
+            <button type="button" class="btn btn-danger btn-small remove-item-btn" title="Remove Experience">&times;</button>
+            <div class="form-group">
+                <label for="jobTitle" class="required">Job Title</label>
+                <input type="text" name="jobTitle" required>
+            </div>
+            <div class="form-group">
+                <label for="company" class="required">Company</label>
+                <input type="text" name="company" required>
+            </div>
+            <div class="form-group">
+                <label for="duration">Duration</label>
+                <input type="text" name="duration" placeholder="e.g., Jan 2021 - Present or Mar 2020 - Dec 2022">
+            </div>
+            <div class="form-group">
+                <label for="description">Description / Responsibilities</label>
+                <textarea name="description" rows="3" placeholder="Briefly describe your key responsibilities and achievements"></textarea>
+            </div>
+        </div>
+    </template>
+
+    <template id="education-template">
+        <div class="education-item">
+             <button type="button" class="btn btn-danger btn-small remove-item-btn" title="Remove Education">&times;</button>
+             <div class="form-group">
+                <label for="institution" class="required">Institution</label>
+                <input type="text" name="institution" required>
+            </div>
+            <div class="form-group">
+                <label for="degree">Degree / Field of Study</label>
+                <input type="text" name="degree" placeholder="e.g., B.S. Computer Science">
+            </div>
+            <div class="form-group">
+                <label for="eduDuration">Duration / Graduation Date</label>
+                <input type="text" name="eduDuration" placeholder="e.g., 2018 - 2022 or Graduated May 2023">
+            </div>
+        </div>
+    </template>
+
+    <!-- Load Scripts -->
     <script src="js/data.js"></script>
     <script src="js/main.js"></script>
 </body>

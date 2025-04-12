@@ -12,7 +12,8 @@
         <nav>
             <a href="dashboard.html" class="active">Dashboard</a>
             <a href="profile.html">My Profile</a>
-            <a href="apply.html?new=true">Apply for New Job</a> <!-- Add query param for new application -->
+            <!-- Link to apply.html with 'new=true' to start fresh -->
+            <a href="apply.html?new=true" class="btn btn-light btn-small" style="color: var(--primary-color);">Apply for New Job</a>
         </nav>
     </header>
 
@@ -23,26 +24,28 @@
                 <!-- Applications will be loaded here by JavaScript -->
                 <p>Loading applications...</p>
             </div>
-            <a href="apply.html?new=true" class="btn btn-secondary">Start a New Application</a>
+             <a href="apply.html?new=true" class="btn btn-primary" style="margin-top: 1rem;">Start a New Application</a>
         </section>
 
+        <!-- Static Demo Sections -->
         <section id="recommended-jobs">
-            <h2>Recommended Jobs (Demo)</h2>
+            <h2>Recommended Jobs (Demo Feature)</h2>
             <ul>
                 <li>Software Engineer - Tech Corp (90% Match)</li>
                 <li>UX Designer - Creative Solutions (85% Match)</li>
                 <li>Product Manager - Innovate Inc (80% Match)</li>
             </ul>
-            <p><small>Job recommendations are static for this prototype.</small></p>
+            <p class="text-muted"><small>Job recommendations are static for this prototype demonstration.</small></p>
         </section>
 
         <section id="upcoming-tasks">
-            <h2>Upcoming Tasks (Demo)</h2>
+            <h2>Upcoming Tasks (Demo Feature)</h2>
             <ul>
                 <li>Interview Prep - Software Engineer @ Tech Corp (Tomorrow)</li>
-                <li>Submit Assessment - UX Designer @ Creative Solutions (3 Days)</li>
+                <li>Submit Assessment - UX Designer @ Creative Solutions (Due in 3 Days)</li>
+                 <li>Follow Up - Product Manager @ Innovate Inc (Next week)</li>
             </ul>
-             <p><small>Upcoming tasks are static for this prototype.</small></p>
+             <p class="text-muted"><small>Upcoming tasks are static for this prototype demonstration.</small></p>
         </section>
     </main>
 
@@ -50,6 +53,7 @@
         <p>Team Project - Final Prototype</p>
     </footer>
 
+    <!-- Load Scripts -->
     <script src="js/data.js"></script>
     <script src="js/main.js"></script>
 </body>
