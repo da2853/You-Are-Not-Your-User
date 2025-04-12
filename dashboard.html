@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Application Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <h1>My Job Application Dashboard</h1>
+        <nav>
+            <a href="dashboard.html" class="active">Dashboard</a>
+            <a href="profile.html">My Profile</a>
+            <a href="apply.html?new=true">Apply for New Job</a> <!-- Add query param for new application -->
+        </nav>
+    </header>
+
+    <main class="container dashboard-container">
+        <section id="active-applications">
+            <h2>Active Applications</h2>
+            <div id="applications-list">
+                <!-- Applications will be loaded here by JavaScript -->
+                <p>Loading applications...</p>
+            </div>
+            <a href="apply.html?new=true" class="btn btn-secondary">Start a New Application</a>
+        </section>
+
+        <section id="recommended-jobs">
+            <h2>Recommended Jobs (Demo)</h2>
+            <ul>
+                <li>Software Engineer - Tech Corp (90% Match)</li>
+                <li>UX Designer - Creative Solutions (85% Match)</li>
+                <li>Product Manager - Innovate Inc (80% Match)</li>
+            </ul>
+            <p><small>Job recommendations are static for this prototype.</small></p>
+        </section>
+
+        <section id="upcoming-tasks">
+            <h2>Upcoming Tasks (Demo)</h2>
+            <ul>
+                <li>Interview Prep - Software Engineer @ Tech Corp (Tomorrow)</li>
+                <li>Submit Assessment - UX Designer @ Creative Solutions (3 Days)</li>
+            </ul>
+             <p><small>Upcoming tasks are static for this prototype.</small></p>
+        </section>
+    </main>
+
+    <footer>
+        <p>Team Project - Final Prototype</p>
+    </footer>
+
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
