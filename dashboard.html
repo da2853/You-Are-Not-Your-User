@@ -3,159 +3,1330 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Job Application Dashboard</title>
+    <title>Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Use external style.css for base styles -->
     <link rel="stylesheet" href="css/style.css">
-    <!-- Optional: Add icon library like Font Awesome if desired for buttons -->
-    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> -->
+    <!-- Inline styles from prototype1.html for dashboard-specific components -->
+    <style>
+        /* --- Styles primarily adapted from workday redesign prototype1.html --- */
+        :root {
+            --primary-color: #0d6efd; /* Bootstrap Primary */
+            --secondary-color: #6c757d; /* Bootstrap Secondary */
+            --success-color: #198754; /* Bootstrap Success */
+            --warning-color: #ffc107; /* Bootstrap Warning */
+            --danger-color: #dc3545; /* Bootstrap Danger */
+            --info-color: #0dcaf0;   /* Bootstrap Info */
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: #212529;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+
+        .dashboard-container {
+            padding: 25px;
+        }
+
+        .dashboard-card {
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+            margin-bottom: 25px;
+            background-color: white;
+            transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: white;
+            border-bottom: 1px solid #dee2e6;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+
+        .card-header h5 {
+            font-weight: 600;
+            margin: 0;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+        }
+        .card-header h5 i {
+             margin-right: 0.6rem;
+             color: var(--primary-color);
+        }
+
+        .card-header .dropdown-toggle::after {
+             display: none;
+        }
+        .card-header .dropdown i {
+             cursor: pointer;
+             color: var(--secondary-color);
+             font-size: 1.2rem;
+        }
+        .card-header .dropdown i:hover {
+             color: var(--primary-color);
+        }
+
+        .card-body {
+            padding: 20px;
+            flex-grow: 1;
+            /* Removed max-height and overflow-y to allow full space usage */
+        }
+
+        .badge {
+            font-weight: 500;
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            border-radius: 12px;
+        }
+
+        /* Application Card Styling */
+        .application-card {
+            background-color: white !important;
+            border: 1px solid #e0e0e0;
+            border-left-width: 5px;
+            border-left-color: var(--secondary-color);
+            margin-bottom: 15px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            background-color: #fff;
+            border-radius: 8px;
+        }
+        .application-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+        }
+
+        /* Status Classes for Application Cards */
+        .application-card.status-submitted,
+        .application-card.status-in-progress,
+        .application-card.status-screening,
+        .application-card.status-assessment { border-left-color: var(--warning-color); }
+        .application-card.status-interview,
+        .application-card.status-interview-stage { border-left-color: var(--info-color); }
+        .application-card.status-offer,
+        .application-card.status-offer-received { border-left-color: var(--success-color); }
+        .application-card.status-rejected,
+        .application-card.status-not-selected,
+        .application-card.status-withdrawn { border-left-color: var(--danger-color); }
+
+        .application-card .card-body {
+             padding: 1rem 1.2rem;
+        }
+
+        .application-compass {
+            height: 8px;
+            border-radius: 4px;
+            background-color: #e9ecef;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        .compass-segment {
+            height: 100%;
+            float: left;
+            transition: width 0.5s ease-in-out;
+        }
+
+        .status-submitted .compass-segment,
+        .status-in-progress .compass-segment,
+        .status-assessment .compass-segment { background-color: var(--warning-color); }
+        .status-screening .compass-segment { background-color: #fd7e14; }
+        .status-interview .compass-segment,
+        .status-interview-stage .compass-segment { background-color: var(--info-color); }
+        .status-offer .compass-segment,
+        .status-offer-received .compass-segment { background-color: var(--success-color); }
+        .status-rejected .compass-segment,
+        .status-not-selected .compass-segment,
+        .status-withdrawn .compass-segment { background-color: var(--danger-color); }
+
+        /* Job Match */
+        .job-match {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .match-circle {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+        /* Match Percentage Gradients */
+        .match-percent.high { background: linear-gradient(135deg, #9eec26, #38b000); }
+        .match-percent.medium { background: linear-gradient(135deg, #ffb700, #fb5607); }
+        .match-percent.low { background: linear-gradient(135deg, #ff9aa2, #dc3545); }
+
+        /* Upcoming Tasks */
+        .task-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .task-item:last-child { border-bottom: none; }
+
+        .task-icon {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            flex-shrink: 0;
+            width: 30px;
+            text-align: center;
+            margin-top: 3px;
+        }
+        .task-details h6 { font-weight: 600; }
+        .task-details p { margin-bottom: 0.5rem; font-size: 0.9rem; }
+
+        /* Recent Activity Timeline */
+        .activity-item {
+            position: relative;
+            padding-left: 35px;
+            padding-bottom: 18px;
+            margin-bottom: 18px;
+            border-left: 2px solid #dee2e6;
+        }
+        .activity-item:last-child { border-left: 2px solid transparent; }
+
+        .activity-item::before {
+            content: '';
+            position: absolute;
+            left: -7px;
+            top: 3px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            border: 2px solid white;
+        }
+        .activity-item h6 { font-weight: 600; font-size: 0.95rem;}
+        .activity-item small { font-size: 0.8rem; }
+        .activity-item p { margin-bottom: 0; font-size: 0.9rem; }
+
+        /* Application Analytics */
+        .stat-number {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 0;
+            line-height: 1.1;
+        }
+        .stat-label {
+            color: var(--secondary-color);
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+        .stat-change {
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+        }
+        .progress-thin {
+            height: 8px;
+            margin-top: 8px;
+            border-radius: 4px;
+        }
+        .progress-bar { border-radius: 4px; }
+
+        /* Insight Cards */
+        .insight-card {
+            border: 1px solid #eee;
+            border-radius: 6px;
+        }
+        .insight-card .card-body {
+            padding: 0.8rem 1rem;
+        }
+        .insight-card i {
+            font-size: 1.5rem;
+        }
+        .insight-card h6 {
+            font-size: 0.95rem;
+            margin-bottom: 0.1rem;
+        }
+        .insight-card p {
+            font-size: 0.85rem;
+            margin-bottom: 0;
+        }
+
+        /* Modal Styling */
+        .modal-header {
+            background-color: var(--primary-color);
+            color: white;
+            border-bottom: none;
+        }
+        .modal-header .btn-close {
+            filter: invert(1) grayscale(100%) brightness(200%);
+        }
+        .modal-title { font-weight: 600; }
+
+        /* Application Detail Modal Timeline */
+        .app-detail-timeline {
+            position: relative;
+            height: 60px;
+            margin: 20px 0 40px 0;
+        }
+        .timeline-line {
+            height: 4px;
+            background-color: #e9ecef;
+            position: absolute;
+            top: 8px;
+            left: 10px; right: 10px;
+            z-index: 1;
+            border-radius: 2px;
+        }
+        .timeline-line-progress {
+             height: 4px;
+             background-color: var(--success-color);
+             position: absolute;
+             top: 8px;
+             left: 10px;
+             z-index: 2;
+             border-radius: 2px;
+             transition: width 0.5s ease-in-out;
+        }
+
+        .timeline-dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            position: absolute;
+            background-color: #e9ecef;
+            border: 3px solid white;
+            z-index: 3;
+            top: 0;
+            transform: translateX(-50%);
+        }
+        .timeline-dot.active {
+            background-color: var(--success-color);
+        }
+        .timeline-dot:nth-child(1) { left: 0%; }
+        .timeline-dot:nth-child(2) { left: 33%; }
+        .timeline-dot:nth-child(3) { left: 67%; }
+        .timeline-dot:nth-child(4) { left: 100%; }
+
+        .timeline-labels {
+            display: flex;
+            justify-content: space-between;
+            position: absolute;
+            width: 100%;
+            top: 30px;
+        }
+        .timeline-label {
+            width: 25%;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--secondary-color);
+            padding: 0 5px;
+        }
+        .timeline-label.active {
+            color: var(--success-color);
+            font-weight: bold;
+        }
+
+        /* Table styling in modal */
+        .modal-body .table {
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
+        .modal-body .table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            border-bottom-width: 1px;
+        }
+        .modal-body .table td {
+            vertical-align: middle;
+        }
+
+        /* Customize Modal */
+        #customizeModal .list-group-item {
+             cursor: grab;
+             background-color: #f8f9fa;
+             margin-bottom: 5px;
+             border-radius: 5px;
+        }
+         #customizeModal .list-group-item:active {
+             cursor: grabbing;
+             background-color: #e9ecef;
+         }
+
+        /* Responsive adjustments */
+        @media (max-width: 992px) {
+            .dashboard-container { padding: 15px; }
+             .dashboard-card { margin-bottom: 20px; }
+             .stat-number { font-size: 1.8rem; }
+             .stat-label { font-size: 0.85rem; }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-card { margin-bottom: 15px; }
+            .card-header h5 { font-size: 1rem; }
+            .card-body { padding: 15px; }
+
+            .job-match {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            .match-circle { margin-bottom: 5px; width: 50px; height: 50px; font-size: 0.9rem;}
+
+            .task-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            .task-icon { margin-bottom: 5px; }
+
+            .activity-item { padding-left: 25px; }
+            .activity-item::before { left: -7px; }
+
+            .analytics-grid .col-md-3 { margin-bottom: 20px; }
+             .app-detail-timeline { margin-bottom: 25px; height: 70px; }
+             .timeline-labels { top: 35px; }
+             .timeline-label { font-size: 0.7rem; }
+        }
+    </style>
 </head>
 <body>
-    <header class="dashboard-header">
-        <div class="container header-container">
-            <h1>My Job Dashboard</h1>
-            <nav>
-                <a href="dashboard.html" class="nav-link active">Dashboard</a>
-                <a href="profile.html" class="nav-link">My Profile</a>
-                <a href="apply.html?new=true" class="btn btn-primary btn-small">Apply for New Job</a>
-            </nav>
-        </div>
-    </header>
-
-    <main class="container dashboard-grid">
-
-        <!-- Main Content Area (Applications) -->
-        <section id="active-applications" class="dashboard-section main-section card">
-            <div class="card-header">
-                <h2>Active Applications</h2>
-                <a href="apply.html?new=true" class="btn btn-secondary btn-small">Start New Application</a>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="dashboard.html">
+                <i class="bi bi-briefcase-fill me-2"></i>You Are Not Your User
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="profile.html">Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Job Search</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Messages <span class="badge bg-danger ms-1">3</span></a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto">
+                     <li class="nav-item me-2">
+                        <a class="nav-link" href="apply.html?new=true" title="Start a new application">
+                            <i class="bi bi-plus-circle-fill me-1"></i>New Application
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownUser" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-person-circle me-1"></i>David Joyner
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownUser">
+                            <li><a class="dropdown-item" href="profile.html"><i class="bi bi-person-lines-fill me-2"></i>My Profile</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-gear-fill me-2"></i>Settings</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
-            <div class="card-body">
-                <div id="applications-list">
-                    <!-- Applications will be loaded here by JavaScript -->
-                    <p class="loading-placeholder">Loading applications...</p>
-                     <!-- Empty state message will be shown here if no apps -->
-                     <div id="empty-applications-message" style="display: none; text-align: center; padding: 2rem;">
-                         <p>You haven't submitted any applications yet.</p>
-                         <a href="apply.html?new=true" class="btn btn-primary" style="margin-top: 1rem;">Start Your First Application</a>
-                     </div>
+        </div>
+    </nav>
+
+    <!-- Main Dashboard Container -->
+    <div class="container-fluid dashboard-container">
+        <div class="row mb-4 align-items-center">
+            <div class="col-md-7">
+                <h2>Your Application Dashboard</h2>
+                <p class="text-muted mb-0">Track your applications, upcoming tasks, and recommended jobs in one place.</p>
+            </div>
+            <div class="col-md-5 text-md-end mt-3 mt-md-0">
+                <button class="btn btn-outline-secondary me-2" id="customizeBtn" title="Customize layout and widgets">
+                    <i class="bi bi-grid-3x3-gap-fill me-1"></i>Customize
+                </button>
+                 <a href="apply.html?new=true" class="btn btn-primary" title="Start a new application">
+                    <i class="bi bi-plus-lg me-1"></i>New Application
+                </a>
+            </div>
+        </div>
+
+        <!-- Dashboard Grid -->
+        <div class="row">
+            <!-- Active Applications Column -->
+            <div class="col-lg-7 mb-4">
+                <div class="dashboard-card h-100">
+                    <div class="card-header">
+                        <h5><i class="bi bi-briefcase"></i>Active Applications</h5>
+                        <div class="dropdown">
+                            <i class="bi bi-three-dots-vertical" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"></i>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
+                                <li><a class="dropdown-item" href="#"><i class="bi bi-sort-down me-2"></i>Sort by Date Updated</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="bi bi-filter-left me-2"></i>Sort by Status</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="bi bi-funnel me-2"></i>Filter Applications...</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-muted" href="#"><i class="bi bi-arrows-move me-2"></i>Move Widget</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="applications-list">
+                            <!-- Only active applications shown here -->
+                            <!-- Apple Application -->
+                            <div class="card application-card mb-3 shadow-sm status-interview-stage" onclick="showApplicationDetails('apple-senior-pd')">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <div>
+                                            <h6 class="card-title mb-0">Senior Product Designer</h6>
+                                            <p class="card-text text-muted small mb-0">Apple Inc. - Cupertino, CA</p>
+                                        </div>
+                                        <span class="badge status-interview-stage" title="Current Status: Interview Stage">Interview Stage</span>
+                                    </div>
+                                    <div class="application-compass" title="Application Progress">
+                                        <div class="compass-segment" style="width: 67%;"></div>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center mt-2">
+                                        <small class="text-muted" title="Date Applied">Applied: Mar 20, 2025</small>
+                                        <div class="text-info">Interview tomorrow</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Google Application -->
+                            <div class="card application-card mb-3 shadow-sm status-assessment" onclick="showApplicationDetails('google-swe')">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <div>
+                                            <h6 class="card-title mb-0">Software Engineer</h6>
+                                            <p class="card-text text-muted small mb-0">Google - Atlanta, GA</p>
+                                        </div>
+                                        <span class="badge status-in-progress" title="Current Status: In Progress">In Progress</span>
+                                    </div>
+                                    <div class="application-compass" title="Application Progress">
+                                        <div class="compass-segment" style="width: 45%;"></div>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center mt-2">
+                                        <small class="text-muted" title="Date Applied">Applied: Mar 15, 2025</small>
+                                        <div class="text-warning">Assessment pending</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- New Tesla Application -->
+                            <div class="card application-card mb-3 shadow-sm status-screening" onclick="showApplicationDetails('tesla-ui')">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <div>
+                                            <h6 class="card-title mb-0">UI/UX Designer</h6>
+                                            <p class="card-text text-muted small mb-0">Tesla - Austin, TX</p>
+                                        </div>
+                                        <span class="badge status-screening" title="Current Status: Screening">Screening</span>
+                                    </div>
+                                    <div class="application-compass" title="Application Progress">
+                                        <div class="compass-segment" style="width: 33%;"></div>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center mt-2">
+                                        <small class="text-muted" title="Date Applied">Applied: Mar 18, 2025</small>
+                                        <div class="text-warning">Resume in review</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- New Meta Application -->
+                            <div class="card application-card mb-3 shadow-sm status-assessment" onclick="showApplicationDetails('meta-da')">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <div>
+                                            <h6 class="card-title mb-0">Data Analyst</h6>
+                                            <p class="card-text text-muted small mb-0">Meta - Remote</p>
+                                        </div>
+                                        <span class="badge status-assessment" title="Current Status: Assessment">Assessment</span>
+                                    </div>
+                                    <div class="application-compass" title="Application Progress">
+                                        <div class="compass-segment" style="width: 45%;"></div>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center mt-2">
+                                        <small class="text-muted" title="Date Applied">Applied: Mar 25, 2025</small>
+                                        <div class="text-warning">Complete by Apr 8</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- New Spotify Application -->
+                            <div class="card application-card mb-3 shadow-sm status-interview" onclick="showApplicationDetails('spotify-pm')">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <div>
+                                            <h6 class="card-title mb-0">Product Manager</h6>
+                                            <p class="card-text text-muted small mb-0">Spotify - New York, NY</p>
+                                        </div>
+                                        <span class="badge status-interview" title="Current Status: Interview">Interview</span>
+                                    </div>
+                                    <div class="application-compass" title="Application Progress">
+                                        <div class="compass-segment" style="width: 67%;"></div>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center mt-2">
+                                        <small class="text-muted" title="Date Applied">Applied: Mar 10, 2025</small>
+                                        <div class="text-info">Interview on Apr 5</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- New Adobe Application -->
+                            <div class="card application-card mb-3 shadow-sm status-submitted" onclick="showApplicationDetails('adobe-gd')">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <div>
+                                            <h6 class="card-title mb-0">Graphic Designer</h6>
+                                            <p class="card-text text-muted small mb-0">Adobe - San Jose, CA</p>
+                                        </div>
+                                        <span class="badge bg-warning text-dark" title="Current Status: Submitted">Submitted</span>
+                                    </div>
+                                    <div class="application-compass" title="Application Progress">
+                                        <div class="compass-segment" style="width: 10%;"></div>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center mt-2">
+                                        <small class="text-muted" title="Date Applied">Applied: Apr 1, 2025</small>
+                                        <div class="text-muted">Recently submitted</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center mt-3 pt-2 border-top" id="view-all-apps-link">
+                            <a href="#" class="btn btn-outline-primary btn-sm">View All Applications</a>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </section>
 
-        <!-- Sidebar Area (Recommendations, Tasks, Analytics) -->
-        <aside class="sidebar">
-            <section id="recommended-jobs" class="dashboard-section card">
-                 <div class="card-header">
-                    <h2>Recommended Jobs</h2>
-                 </div>
-                 <div class="card-body">
-                    <ul class="compact-list">
-                        <li>Software Engineer - Tech Corp <span class="match-badge high">90% Match</span></li>
-                        <li>UX Designer - Creative Solutions <span class="match-badge medium">85% Match</span></li>
-                        <li>Product Manager - Innovate Inc <span class="match-badge medium">80% Match</span></li>
-                    </ul>
-                    <p class="text-muted"><small>Job recommendations are static demo data.</small></p>
-                 </div>
-            </section>
+            <!-- Sidebar Column -->
+            <div class="col-lg-5">
+                 <div class="row">
+                    <!-- Recommended Jobs -->
+                    <div class="col-12 mb-4">
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <h5><i class="bi bi-lightning-fill"></i>Recommended Jobs</h5>
+                                <div class="dropdown">
+                                    <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown"></i>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li><a class="dropdown-item" href="#"><i class="bi bi-arrow-repeat me-2"></i>Refresh</a></li>
+                                        <li><a class="dropdown-item" href="#"><i class="bi bi-sliders me-2"></i>Adjust Preferences</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item text-muted" href="#"><i class="bi bi-arrows-move me-2"></i>Move Widget</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <!-- Recommended Job 1 (Static Demo) -->
+                                <div class="card mb-3 border-0 shadow-sm">
+                                    <div class="card-body">
+                                        <div class="job-match">
+                                            <div class="match-circle match-percent high">94%</div>
+                                            <div class="flex-grow-1">
+                                                <h6 class="card-title mb-1">Senior UX Designer</h6>
+                                                <p class="card-text text-muted mb-2 small">Netflix - Remote</p>
+                                                <p class="card-text small mb-0">
+                                                    <i class="bi bi-check-circle-fill text-success me-1"></i>Matches design systems experience
+                                                    <br>
+                                                    <i class="bi bi-check-circle-fill text-success me-1"></i>Preferred remote setting
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="text-end mt-2">
+                                            <button class="btn btn-outline-secondary btn-sm me-1" title="Save for later"><i class="bi bi-bookmark"></i></button>
+                                            <a href="apply.html?job=demo-ux" class="btn btn-primary btn-sm">Apply Now</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Recommended Job 2 (Static Demo) -->
+                                <div class="card mb-3 border-0 shadow-sm">
+                                    <div class="card-body">
+                                        <div class="job-match">
+                                            <div class="match-circle match-percent medium">88%</div>
+                                            <div class="flex-grow-1">
+                                                <h6 class="card-title mb-1">Product Manager</h6>
+                                                <p class="card-text text-muted mb-2 small">Salesforce - Atlanta, GA</p>
+                                                <p class="card-text small mb-0">
+                                                    <i class="bi bi-check-circle-fill text-success me-1"></i>Matches management experience
+                                                    <br>
+                                                    <i class="bi bi-check-circle-fill text-success me-1"></i>Preferred location match
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="text-end mt-2">
+                                            <button class="btn btn-outline-secondary btn-sm me-1" title="Save for later"><i class="bi bi-bookmark"></i></button>
+                                            <a href="apply.html?job=demo-pm" class="btn btn-primary btn-sm">Apply Now</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <a href="#" class="btn btn-outline-primary btn-sm">View More Recommendations</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-            <section id="upcoming-tasks" class="dashboard-section card">
-                 <div class="card-header">
-                     <h2>Upcoming Tasks</h2>
+                    <!-- Upcoming Tasks -->
+                    <div class="col-12 mb-4">
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <h5><i class="bi bi-calendar-check"></i>Upcoming Tasks</h5>
+                                <div class="dropdown">
+                                    <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown"></i>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li><a class="dropdown-item" href="#"><i class="bi bi-plus-circle me-2"></i>Add Task</a></li>
+                                        <li><a class="dropdown-item" href="#"><i class="bi bi-calendar3 me-2"></i>View Calendar</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item text-muted" href="#"><i class="bi bi-arrows-move me-2"></i>Move Widget</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <!-- Task 1 (Static Demo) -->
+                                <div class="task-item">
+                                    <div class="task-icon">
+                                        <i class="bi bi-camera-video-fill"></i>
+                                    </div>
+                                    <div class="flex-grow-1 task-details">
+                                        <div class="d-flex justify-content-between align-items-center mb-1">
+                                            <h6 class="mb-0">Interview with Apple</h6>
+                                            <span class="badge bg-warning">Tomorrow</span>
+                                        </div>
+                                        <p class="text-muted mb-2">Apr 3, 2025 • 2:00 PM EST - Senior Product Designer</p>
+                                        <div class="btn-group btn-group-sm">
+                                            <button class="btn btn-outline-primary" title="Add to your calendar"><i class="bi bi-calendar-plus me-1"></i>Calendar</button>
+                                            <button class="btn btn-outline-secondary" title="View preparation tips"><i class="bi bi-lightbulb me-1"></i>Prep</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Task 2 (Static Demo) -->
+                                <div class="task-item">
+                                    <div class="task-icon">
+                                        <i class="bi bi-code-square"></i>
+                                    </div>
+                                    <div class="flex-grow-1 task-details">
+                                        <div class="d-flex justify-content-between align-items-center mb-1">
+                                            <h6 class="mb-0">Complete Coding Assessment</h6>
+                                            <span class="badge bg-danger">Due in 2 days</span>
+                                        </div>
+                                        <p class="text-muted mb-2">Due Apr 5, 2025 - Google Software Engineer</p>
+                                         <div class="btn-group btn-group-sm">
+                                            <button class="btn btn-outline-primary" title="Start the assessment"><i class="bi bi-link-45deg me-1"></i>Start</button>
+                                            <button class="btn btn-outline-secondary" title="View assessment guide"><i class="bi bi-info-circle me-1"></i>Guide</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Task 3 (Static Demo) -->
+                                <div class="task-item">
+                                    <div class="task-icon">
+                                        <i class="bi bi-envelope-check"></i>
+                                    </div>
+                                    <div class="flex-grow-1 task-details">
+                                        <div class="d-flex justify-content-between align-items-center mb-1">
+                                            <h6 class="mb-0">Respond to Microsoft Offer</h6>
+                                            <span class="badge bg-info">Due in 5 days</span>
+                                        </div>
+                                        <p class="text-muted mb-2">Due Apr 5, 2025 - Marketing Manager</p>
+                                         <div class="btn-group btn-group-sm">
+                                            <button class="btn btn-outline-success" title="Accept the offer"><i class="bi bi-check-circle me-1"></i>Accept</button>
+                                            <button class="btn btn-outline-danger" title="Decline the offer"><i class="bi bi-x-circle me-1"></i>Decline</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <a href="#" class="btn btn-outline-primary btn-sm">View All Tasks</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                  </div>
-                 <div class="card-body">
-                    <ul class="compact-list task-list">
-                        <li>
-                            <span class="task-title">Interview Prep - SE @ Tech Corp</span>
-                            <span class="task-due">Tomorrow</span>
-                        </li>
-                        <li>
-                             <span class="task-title">Submit Assessment - UXD @ Creative Solutions</span>
-                            <span class="task-due">Due in 3 Days</span>
-                        </li>
-                         <li>
-                             <span class="task-title">Follow Up - PM @ Innovate Inc</span>
-                            <span class="task-due">Next week</span>
-                        </li>
-                    </ul>
-                     <p class="text-muted"><small>Upcoming tasks are static demo data.</small></p>
-                 </div>
-            </section>
+            </div>
 
-             <section id="application-analytics" class="dashboard-section card">
-                 <div class="card-header">
-                     <h2>Application Analytics</h2>
-                 </div>
-                 <div class="card-body analytics-grid">
-                     <div class="analytic-item">
-                         <span class="analytic-value">15</span>
-                         <span class="analytic-label">Total Apps</span>
-                         <small class="text-muted">+10% vs last month</small>
+             <!-- Recent Activity & Analytics Row -->
+            <div class="col-lg-7 mb-4">
+                 <!-- Recent Activity -->
+                <div class="dashboard-card h-100">
+                    <div class="card-header">
+                        <h5><i class="bi bi-activity"></i>Recent Activity</h5>
+                         <div class="dropdown">
+                            <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown"></i>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#"><i class="bi bi-funnel me-2"></i>Filter Activity...</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="bi bi-eye-slash me-2"></i>Mark All as Read</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-muted" href="#"><i class="bi bi-arrows-move me-2"></i>Move Widget</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <!-- Activity 1 (Static Demo) -->
+                        <div class="activity-item">
+                            <div class="d-flex justify-content-between">
+                                <h6 class="mb-1">Application Status Updated</h6>
+                                <small class="text-muted">2 hours ago</small>
+                            </div>
+                            <p class="mb-0">Your application for <strong>Software Engineer at Google</strong> moved to <span class="badge bg-warning">Assessment</span> stage.</p>
+                        </div>
+                        <!-- Activity 2 (Static Demo) -->
+                        <div class="activity-item">
+                            <div class="d-flex justify-content-between">
+                                <h6 class="mb-1">Interview Scheduled</h6>
+                                <small class="text-muted">Yesterday</small>
+                            </div>
+                            <p class="mb-0">Interview for <strong>Senior Product Designer at Apple</strong> confirmed for April 3, 2:00 PM EST.</p>
+                        </div>
+                         <!-- Activity 3 (Static Demo) -->
+                        <div class="activity-item">
+                            <div class="d-flex justify-content-between">
+                                <h6 class="mb-1">New Message Received</h6>
+                                <small class="text-muted">2 days ago</small>
+                            </div>
+                            <p class="mb-0">Message from <strong>Sarah Johnson (Microsoft)</strong> regarding your offer details.</p>
+                        </div>
+                         <!-- Activity 4 (Static Demo) -->
+                        <div class="activity-item">
+                            <div class="d-flex justify-content-between">
+                                <h6 class="mb-1">Application Not Selected</h6>
+                                <small class="text-muted">March 15, 2025</small>
+                            </div>
+                            <p class="mb-0">Application for <strong>Data Scientist at Amazon</strong> was not selected.</p>
+                        </div>
+                         <div class="text-center">
+                            <a href="#" class="btn btn-outline-primary btn-sm">View All Activity</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5 mb-4">
+                <!-- Application Analytics -->
+                <div class="dashboard-card h-100">
+                    <div class="card-header">
+                        <h5><i class="bi bi-graph-up"></i>Application Analytics</h5>
+                        <div class="dropdown">
+                             <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown"></i>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#">Last 30 Days</a></li>
+                                <li><a class="dropdown-item" href="#">Last 3 Months</a></li>
+                                <li><a class="dropdown-item" href="#">All Time</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-muted" href="#"><i class="bi bi-arrows-move me-2"></i>Move Widget</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-6 col-md-3 mb-3">
+                                <div class="stat-number">15</div>
+                                <div class="stat-label">Total Applied</div>
+                                <div class="stat-change text-success">
+                                    <i class="bi bi-arrow-up-short"></i>20%
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3 mb-3">
+                                <div class="stat-number">8</div>
+                                <div class="stat-label">Interviews</div>
+                                <div class="stat-change text-success">
+                                    <i class="bi bi-arrow-up-short"></i>15%
+                                </div>
+                            </div>
+                             <div class="col-6 col-md-3 mb-3">
+                                <div class="stat-number">53%</div>
+                                <div class="stat-label">Interview Rate</div>
+                                 <div class="stat-change text-muted">
+                                    <i class="bi bi-dash"></i>Same
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3 mb-3">
+                                <div class="stat-number">2</div>
+                                <div class="stat-label">Offers</div>
+                                <div class="stat-change text-success">
+                                   <i class="bi bi-arrow-up-short"></i>100%
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="my-3">
+
+                        <h6 class="mb-3 text-center text-muted">Application Insights</h6>
+                         <div class="row">
+                             <div class="col-md-6 mb-3">
+                                 <div class="card insight-card h-100">
+                                    <div class="card-body d-flex align-items-center">
+                                        <i class="bi bi-lightning-fill text-warning me-2"></i>
+                                        <div>
+                                            <h6>Resume Performance</h6>
+                                            <p class="text-muted">Gets 45% more views than average in your field.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                             </div>
+                             <div class="col-md-6 mb-3">
+                                 <div class="card insight-card h-100">
+                                    <div class="card-body d-flex align-items-center">
+                                        <i class="bi bi-star-fill text-warning me-2"></i>
+                                        <div>
+                                            <h6>Skill Gap</h6>
+                                            <p class="text-muted">Adding "Python" could increase match rate by 15%.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                             </div>
+                         </div>
+                         <div class="text-center">
+                            <a href="#" class="btn btn-outline-primary btn-sm">View Detailed Report</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> <!-- End Row -->
+
+    </div> <!-- End Dashboard Container -->
+
+    <!-- Application Details Modal -->
+    <div class="modal fade" id="applicationModal" tabindex="-1" aria-labelledby="appModalTitleLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="appModalTitleLabel">Application Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="appModalBody">
+                    <!-- Content will be loaded dynamically -->
+                     <div class="text-center p-5">
+                         <span class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </span>
                      </div>
-                      <div class="analytic-item">
-                         <span class="analytic-value">8</span>
-                         <span class="analytic-label">Interviews</span>
-                         <small class="text-muted">+15% vs last month</small>
-                     </div>
-                     <div class="analytic-item">
-                         <span class="analytic-value">53%</span>
-                         <span class="analytic-label">Interview Rate</span>
-                          <small class="text-muted">-2% vs last month</small>
-                     </div>
-                      <div class="analytic-item">
-                         <span class="analytic-value">2</span>
-                         <span class="analytic-label">Offers Received</span>
-                         <small class="text-muted">+100% vs last month</small>
-                     </div>
-                 </div>
-                  <p class="text-muted" style="margin-top: 0.5rem;"><small>Analytics are static demo data.</small></p>
-            </section>
-        </aside>
+                </div>
+                <div class="modal-footer justify-content-between">
+                     <!-- Placeholder for potential modal actions like withdraw -->
+                     <button type="button" class="btn btn-outline-danger" id="modalWithdrawBtn" style="display: none;">Withdraw Application</button>
+                     <div>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <a href="#" id="modalViewEditBtn" class="btn btn-primary">View/Edit Application</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    </main>
+    <!-- Customize Dashboard Modal -->
+    <div class="modal fade" id="customizeModal" tabindex="-1" aria-labelledby="customizeModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="customizeModalLabel"><i class="bi bi-grid-3x3-gap-fill me-2"></i>Customize Dashboard</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-muted">Toggle visibility or drag to reorder widgets.</p>
 
-    <footer>
-        <p>Team Project - Final Prototype</p>
-    </footer>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Visible Widgets</label>
+                        <div class="list-group" id="visibleWidgetsList">
+                            <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" data-widget-id="applications">
+                                <div>
+                                    <i class="bi bi-grip-vertical me-2 text-muted"></i>
+                                    <i class="bi bi-briefcase me-2"></i>Active Applications
+                                </div>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="toggleApplications" checked>
+                                    <label class="form-check-label" for="toggleApplications"></label>
+                                </div>
+                            </div>
+                             <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" data-widget-id="recommendations">
+                                <div>
+                                    <i class="bi bi-grip-vertical me-2 text-muted"></i>
+                                    <i class="bi bi-lightning-fill me-2"></i>Recommended Jobs
+                                </div>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="toggleRecommendations" checked>
+                                    <label class="form-check-label" for="toggleRecommendations"></label>
+                                </div>
+                            </div>
+                             <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" data-widget-id="tasks">
+                                <div>
+                                    <i class="bi bi-grip-vertical me-2 text-muted"></i>
+                                    <i class="bi bi-calendar-check me-2"></i>Upcoming Tasks
+                                </div>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="toggleTasks" checked>
+                                     <label class="form-check-label" for="toggleTasks"></label>
+                                </div>
+                            </div>
+                            <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" data-widget-id="activity">
+                                <div>
+                                    <i class="bi bi-grip-vertical me-2 text-muted"></i>
+                                    <i class="bi bi-activity me-2"></i>Recent Activity
+                                </div>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="toggleActivity" checked>
+                                    <label class="form-check-label" for="toggleActivity"></label>
+                                </div>
+                            </div>
+                             <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" data-widget-id="analytics">
+                                <div>
+                                    <i class="bi bi-grip-vertical me-2 text-muted"></i>
+                                    <i class="bi bi-graph-up me-2"></i>Application Analytics
+                                </div>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="toggleAnalytics" checked>
+                                    <label class="form-check-label" for="toggleAnalytics"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Additional Widgets</label>
+                         <div class="list-group">
+                            <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i class="bi bi-bookmark-star me-2"></i>Saved Jobs
+                                </div>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="toggleSavedJobs">
+                                    <label class="form-check-label" for="toggleSavedJobs"></label>
+                                </div>
+                            </div>
+                             <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i class="bi bi-mortarboard-fill me-2"></i>Learning Resources
+                                </div>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="toggleLearning">
+                                     <label class="form-check-label" for="toggleLearning"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                     <small class="text-muted d-block mt-3">Note: Drag & drop reordering is simulated in this prototype.</small>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Load Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Data API (localStorage) -->
     <script src="js/data.js"></script>
+    <!-- Core App Logic (minimal needed for dashboard display) -->
     <script src="js/main.js"></script>
+
+    <!-- Inline script specific to Dashboard interactivity -->
     <script>
-        // Add a small script to ensure the empty state message is handled correctly on initial load
+        // Function to show rich application details in modal
+        function showApplicationDetails(jobId) {
+            const applicationModal = new bootstrap.Modal(document.getElementById('applicationModal'));
+            const modalTitle = document.getElementById('appModalTitleLabel');
+            const modalBody = document.getElementById('appModalBody');
+            const modalViewEditBtn = document.getElementById('modalViewEditBtn');
+            const modalWithdrawBtn = document.getElementById('modalWithdrawBtn');
+
+            // Show loading spinner initially
+            modalBody.innerHTML = `
+                 <div class="text-center p-5">
+                     <span class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </span>
+                     <p class="mt-2 text-muted">Loading application details...</p>
+                 </div>`;
+            applicationModal.show();
+
+            // For demo purposes, show a static application detail view based on jobId
+            setTimeout(() => {
+                // Mock data based on job ID
+                let app = {
+                    jobId: jobId,
+                    status: 'Unknown',
+                    jobTitle: 'Job Title',
+                    company: 'Company',
+                    location: 'Location',
+                    submittedDate: new Date().toISOString(),
+                    lastUpdated: new Date().toISOString()
+                };
+                
+                // Set different data based on job ID for demo
+                if (jobId === 'apple-senior-pd') {
+                    app = {
+                        jobId: jobId,
+                        status: 'Interview Stage',
+                        jobTitle: 'Senior Product Designer',
+                        company: 'Apple Inc.',
+                        location: 'Cupertino, CA',
+                        submittedDate: '2025-03-20T10:30:00Z',
+                        lastUpdated: '2025-04-01T09:15:00Z'
+                    };
+                } else if (jobId === 'google-swe') {
+                    app = {
+                        jobId: jobId,
+                        status: 'In Progress',
+                        jobTitle: 'Software Engineer',
+                        company: 'Google',
+                        location: 'Atlanta, GA',
+                        submittedDate: '2025-03-15T14:45:00Z',
+                        lastUpdated: '2025-03-30T16:20:00Z'
+                    };
+                } else if (jobId === 'tesla-ui') {
+                    app = {
+                        jobId: jobId,
+                        status: 'Screening',
+                        jobTitle: 'UI/UX Designer',
+                        company: 'Tesla',
+                        location: 'Austin, TX',
+                        submittedDate: '2025-03-18T08:20:00Z',
+                        lastUpdated: '2025-03-25T14:45:00Z'
+                    };
+                } else if (jobId === 'meta-da') {
+                    app = {
+                        jobId: jobId,
+                        status: 'Assessment',
+                        jobTitle: 'Data Analyst',
+                        company: 'Meta',
+                        location: 'Remote',
+                        submittedDate: '2025-03-25T11:30:00Z',
+                        lastUpdated: '2025-04-01T15:10:00Z'
+                    };
+                } else if (jobId === 'spotify-pm') {
+                    app = {
+                        jobId: jobId,
+                        status: 'Interview',
+                        jobTitle: 'Product Manager',
+                        company: 'Spotify',
+                        location: 'New York, NY',
+                        submittedDate: '2025-03-10T09:45:00Z',
+                        lastUpdated: '2025-03-28T10:20:00Z'
+                    };
+                } else if (jobId === 'adobe-gd') {
+                    app = {
+                        jobId: jobId,
+                        status: 'Submitted',
+                        jobTitle: 'Graphic Designer',
+                        company: 'Adobe',
+                        location: 'San Jose, CA',
+                        submittedDate: '2025-04-01T16:30:00Z',
+                        lastUpdated: '2025-04-01T16:30:00Z'
+                    };
+                } else if (jobId === 'microsoft-mm') {
+                    app = {
+                        jobId: jobId,
+                        status: 'Offer Received',
+                        jobTitle: 'Marketing Manager',
+                        company: 'Microsoft',
+                        location: 'Remote',
+                        submittedDate: '2025-03-05T09:15:00Z',
+                        lastUpdated: '2025-03-28T11:30:00Z'
+                    };
+                } else if (jobId === 'amazon-ds') {
+                    app = {
+                        jobId: jobId,
+                        status: 'Not Selected',
+                        jobTitle: 'Data Scientist',
+                        company: 'Amazon',
+                        location: 'Seattle, WA',
+                        submittedDate: '2025-02-25T10:00:00Z',
+                        lastUpdated: '2025-03-15T13:45:00Z'
+                    };
+                }
+
+                modalTitle.textContent = `${app.jobTitle} - ${app.company}`;
+                modalViewEditBtn.href = `apply.html?jobId=${app.jobId}`;
+                modalWithdrawBtn.dataset.jobid = jobId;
+                modalWithdrawBtn.style.display = 'inline-block';
+
+                // Determine progress stages and current stage index
+                const stages = ['Applied', 'Review/Assess', 'Interview', 'Decision'];
+                let currentStageIndex = 0; // Default to Applied
+                const status = app.status?.toLowerCase() || '';
+
+                if (status.includes('review') || status.includes('screening') || status.includes('assessment') || status.includes('progress')) {
+                    currentStageIndex = 1;
+                } else if (status.includes('interview')) {
+                    currentStageIndex = 2;
+                } else if (status.includes('offer') || status.includes('reject') || status.includes('not selected') || status.includes('withdrawn')) {
+                    currentStageIndex = 3;
+                }
+
+                // Calculate timeline progress width
+                const progressWidth = (currentStageIndex / (stages.length - 1)) * 100;
+
+                // Create timeline HTML
+                let timelineHTML = `
+                    <div class="app-detail-timeline mb-5">
+                        <div class="timeline-line"></div>
+                        <div class="timeline-line-progress" style="width: ${progressWidth}%;"></div>
+                        ${stages.map((stage, index) => `<div class="timeline-dot ${index <= currentStageIndex ? 'active' : ''}"></div>`).join('')}
+                        <div class="timeline-labels">
+                            ${stages.map((stage, index) => `<div class="timeline-label ${index <= currentStageIndex ? 'active' : ''}">${stage}</div>`).join('')}
+                        </div>
+                    </div>`;
+
+                // Status Alert Box
+                let alertClass = 'alert-secondary'; // Default
+                let alertIcon = 'bi-info-circle-fill';
+                if (status.includes('interview')) { alertClass = 'alert-info'; alertIcon = 'bi-calendar-check-fill'; }
+                if (status.includes('assessment') || status.includes('review') || status.includes('screening') || status.includes('progress') || status.includes('submitted')) { alertClass = 'alert-warning'; alertIcon = 'bi-hourglass-split'; }
+                if (status.includes('offer')) { alertClass = 'alert-success'; alertIcon = 'bi-check-circle-fill'; }
+                if (status.includes('reject') || status.includes('not selected') || status.includes('withdrawn')) { alertClass = 'alert-danger'; alertIcon = 'bi-x-octagon-fill'; }
+
+                const statusAlertHTML = `
+                    <div class="alert ${alertClass} d-flex align-items-center">
+                        <i class="bi ${alertIcon} me-2 fs-4"></i>
+                        <div>
+                            <strong>Current Status:</strong> ${app.status}
+                            ${status.includes('interview') ? '<br><small>Check "Upcoming Tasks" for details.</small>' : ''}
+                             ${status.includes('offer') ? '<br><small>Congratulations! Respond by April 5, 2025.</small>' : ''}
+                             ${status.includes('progress') ? '<br><small>Check "Upcoming Tasks" for assessment details.</small>' : ''}
+                        </div>
+                    </div>`;
+
+                // Format dates
+                const submittedDate = app.submittedDate ? new Date(app.submittedDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'N/A';
+                const lastUpdatedDate = app.lastUpdated ? new Date(app.lastUpdated).toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) : 'N/A';
+
+                // Basic Details Table
+                const detailsTableHTML = `
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h6 class="mb-3"><i class="bi bi-file-earmark-person me-2"></i>Application Details</h6>
+                            <table class="table table-sm table-borderless">
+                                <tr><th style="width: 35%">Position:</th><td>${app.jobTitle}</td></tr>
+                                <tr><th>Company:</th><td>${app.company}</td></tr>
+                                <tr><th>Location:</th><td>${app.location}</td></tr>
+                                <tr><th>Date Applied:</th><td>${submittedDate}</td></tr>
+                                <tr><th>Last Updated:</th><td>${lastUpdatedDate}</td></tr>
+                                 <tr><th>Job ID:</th><td><small>${app.jobId}</small></td></tr>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                             <h6 class="mb-3"><i class="bi bi-paperclip me-2"></i>Documents Submitted</h6>
+                             <ul class="list-group list-group-flush">
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                    <span><i class="bi bi-file-earmark-text me-2 text-muted"></i>Resume - April 2025.pdf</span>
+                                    <button class="btn btn-sm btn-outline-secondary" disabled title="View document (disabled in prototype)"><i class="bi bi-eye"></i></button>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                    <span><i class="bi bi-file-earmark-text me-2 text-muted"></i>Cover Letter - ${app.company}.pdf</span>
+                                    <button class="btn btn-sm btn-outline-secondary" disabled title="View document (disabled in prototype)"><i class="bi bi-eye"></i></button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>`;
+
+                // Application History/Timeline
+                const timelineHistoryHTML = `
+                    <h6 class="mb-3"><i class="bi bi-clock-history me-2"></i>Application History</h6>
+                    <div class="list-group list-group-flush">
+                        ${app.lastUpdated ? `
+                        <div class="list-group-item px-0">
+                            <div class="d-flex justify-content-between">
+                                <div><i class="bi bi-check-circle-fill text-success me-2"></i><strong>Status Updated</strong></div>
+                                <small class="text-muted">${new Date(app.lastUpdated).toLocaleDateString()}</small>
+                            </div>
+                            <p class="mb-0 ps-4 small">Application status updated to "${app.status}".</p>
+                        </div>
+                        ` : ''}
+                         <div class="list-group-item px-0">
+                            <div class="d-flex justify-content-between">
+                                <div><i class="bi bi-send-fill text-primary me-2"></i><strong>Application Submitted</strong></div>
+                                <small class="text-muted">${submittedDate}</small>
+                            </div>
+                            <p class="mb-0 ps-4 small">You submitted your application for ${app.jobTitle}.</p>
+                        </div>
+                    </div>`;
+
+                // Build the final modal content
+                modalBody.innerHTML = `
+                    ${timelineHTML}
+                    ${statusAlertHTML}
+                    ${detailsTableHTML}
+                    ${timelineHistoryHTML}
+                    <p class="text-center text-muted mt-4"><small>This is a simplified view. Click "View/Edit Application" for full details.</small></p>
+                `;
+            }, 500);
+        }
+
+        // Function to handle the application withdrawal
+        function handleWithdrawApplication(jobId, appTitle) {
+             if (confirm(`Are you sure you want to withdraw your application for "${appTitle}"? This action cannot be undone.`)) {
+                alert(`Application for "${appTitle}" has been withdrawn.`);
+                
+                // Close modal if open
+                const modalElement = document.getElementById('applicationModal');
+                if (modalElement.classList.contains('show')) {
+                    const modalInstance = bootstrap.Modal.getInstance(modalElement);
+                    modalInstance.hide();
+                }
+             }
+        }
+
+        // Initialize event listeners when the DOM is fully loaded
         document.addEventListener('DOMContentLoaded', () => {
-            const appList = document.getElementById('applications-list');
-            const loadingMsg = appList.querySelector('.loading-placeholder');
-            const emptyMsg = document.getElementById('empty-applications-message');
-
-            // Hide loading and show empty message if JS fails to populate or after population if empty
-            const observer = new MutationObserver(mutations => {
-                 // Check if only the placeholder or empty message are children (or if it's truly empty)
-                const hasContent = Array.from(appList.children).some(child =>
-                    child.classList.contains('application-card')
-                );
-                const isLoading = loadingMsg && loadingMsg.style.display !== 'none';
-
-                if (!hasContent && !isLoading) {
-                    if(loadingMsg) loadingMsg.style.display = 'none';
-                    if(emptyMsg) emptyMsg.style.display = 'block';
-                } else {
-                     if(loadingMsg) loadingMsg.style.display = 'none';
-                     if(emptyMsg) emptyMsg.style.display = 'none';
+            // Initialize tooltips
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"], [title]'));
+            tooltipTriggerList.map(function (tooltipTriggerEl) {
+                if (!tooltipTriggerEl.closest('.dropdown-menu')) {
+                    return new bootstrap.Tooltip(tooltipTriggerEl);
                 }
             });
 
-            observer.observe(appList, { childList: true });
+            // Event listener for showing the customize modal
+            const customizeBtn = document.getElementById('customizeBtn');
+            if(customizeBtn) {
+                customizeBtn.addEventListener('click', () => {
+                    const modal = new bootstrap.Modal(document.getElementById('customizeModal'));
+                    modal.show();
+                });
+            }
 
-             // Initial check in case JS loads apps very fast or very slow
-             setTimeout(() => {
-                 const hasContent = Array.from(appList.children).some(child =>
-                    child.classList.contains('application-card')
-                 );
-                 const isLoading = loadingMsg && loadingMsg.style.display !== 'none';
-                  if (!hasContent && !isLoading) {
-                       if(loadingMsg) loadingMsg.style.display = 'none';
-                       if(emptyMsg) emptyMsg.style.display = 'block';
-                   }
-             }, 50); 
+            // Add listener for withdraw button inside the modal
+            const modalWithdrawBtn = document.getElementById('modalWithdrawBtn');
+            if(modalWithdrawBtn) {
+                modalWithdrawBtn.addEventListener('click', (e) => {
+                    const jobId = e.target.dataset.jobid;
+                    const modalTitleText = document.getElementById('appModalTitleLabel')?.textContent || `Job ID ${jobId}`;
+                    // Extract a cleaner title if possible
+                    const appTitle = modalTitleText.split(' - ')[0] || modalTitleText;
+                    handleWithdrawApplication(jobId, appTitle);
+                });
+            }
+
+            // Add event listeners for application cards
+            const applicationCards = document.querySelectorAll('.application-card');
+            applicationCards.forEach(card => {
+                card.addEventListener('click', (e) => {
+                    // Only process if it's the card itself that was clicked (not action buttons)
+                    if (!e.target.closest('.btn')) {
+                        const jobId = card.getAttribute('data-jobid') || card.getAttribute('onclick').match(/'(.*?)'/)[1];
+                        showApplicationDetails(jobId);
+                    }
+                });
+            });
         });
     </script>
 </body>
