@@ -3,158 +3,1805 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Profile</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>My Profile | You Are Not Your User</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <!-- FontAwesome (for specific icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-color: #0d6efd;
+            --primary-dark: #0a58ca;
+            --primary-light: #e6f2ff;
+            --success-color: #198754;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --info-color: #0dcaf0;
+            --gray-light: #f8f9fa;
+            --gray-mid: #dee2e6;
+            --gray-dark: #6c757d;
+            --text-main: #212529;
+            --text-light: #6c757d;
+            --radius: 0.375rem;
+            --shadow: 0 0.125rem 0.35rem rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            background-color: var(--gray-light);
+            color: var(--text-main);
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .page-wrapper {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        main {
+            flex: 1;
+        }
+
+        /* Cards and Sections */
+        .card {
+            background-color: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 1.75rem;
+            border: 1px solid var(--gray-mid);
+            overflow: hidden;
+        }
+
+        .card-profile-info {
+            background-color: #fff;
+            padding: 1.75rem;
+            border-radius: var(--radius);
+            margin-bottom: 1.75rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--gray-mid);
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary-light);
+        }
+
+        .profile-name {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .profile-title {
+            color: var(--text-light);
+            margin-bottom: 0.75rem;
+        }
+
+        .profile-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            flex-wrap: wrap;
+        }
+
+        .profile-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Section Headers and Content */
+        .profile-section {
+            margin-bottom: 1.75rem;
+            background-color: #fff;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--gray-mid);
+            overflow: hidden;
+        }
+
+        .section-header {
+            padding: 1.25rem 1.75rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            border-radius: var(--radius) var(--radius) 0 0;
+            transition: background-color 0.3s ease;
+            border-bottom: 1px solid var(--gray-mid);
+        }
+        
+        .section-header:hover {
+            background-color: var(--primary-light);
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.15rem;
+            font-weight: 600;
+        }
+
+        .section-title h3 {
+            margin-bottom: 0;
+            font-size: 1.15rem;
+            font-weight: 600;
+        }
+
+        .section-title .icon {
+            font-size: 1.35rem;
+            color: var(--primary-color);
+        }
+
+        .section-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .section-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out, padding 0.4s ease-out, border-top-width 0.1s linear 0.3s;
+            padding: 0 1.75rem;
+            border-top: 0px solid var(--gray-mid);
+        }
+
+        .section-content.open {
+            max-height: 5000px;
+            padding: 1.75rem;
+            border-top-width: 1px;
+            transition: max-height 0.4s ease-in, padding 0.4s ease-in, border-top-width 0.1s linear;
+        }
+
+        .toggle-section {
+            border: none;
+            background: none;
+            width: 1.75rem;
+            height: 1.75rem;
+            font-size: 1.3rem;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-dark);
+            cursor: pointer;
+            transition: color 0.3s ease, transform 0.3s ease;
+            border-radius: 50%;
+        }
+        
+        .toggle-section:hover {
+            color: var(--primary-dark);
+            background-color: var(--gray-light);
+        }
+        
+        .toggle-section.expanded {
+            transform: rotate(180deg);
+        }
+
+        /* Progress bar */
+        .progress-container {
+            margin-bottom: 2rem;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .progress-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 0;
+        }
+
+        .progress-percentage {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .progress {
+            height: 8px;
+            border-radius: 4px;
+            background-color: var(--gray-mid);
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            background-color: var(--primary-color);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-column {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .form-label {
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+            margin-bottom: 0.6rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .required-marker {
+            color: var(--danger-color);
+            font-weight: normal;
+            font-size: 0.9em;
+            margin-left: 0.1rem;
+        }
+
+        .form-control, .form-select {
+            display: block;
+            width: 100%;
+            padding: 0.5rem 0.85rem;
+            font-size: 0.95rem;
+            font-weight: 400;
+            line-height: 1.5;
+            color: var(--text-main);
+            background-color: #fff;
+            background-clip: padding-box;
+            border: 1px solid var(--gray-mid);
+            border-radius: var(--radius);
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.2);
+        }
+
+        textarea.form-control {
+            min-height: calc(1.5em + 1rem + 2px) * 3;
+        }
+
+        .form-helper {
+            display: block;
+            margin-top: 0.35rem;
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        /* Dynamic List Items */
+        .card-nested {
+            border: 1px solid var(--gray-mid);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-bottom: 1.25rem;
+            position: relative;
+            background-color: #fff;
+            box-shadow: none;
+            transition: border-color 0.2s ease;
+        }
+        
+        .card-nested:hover {
+            border-color: var(--primary-light);
+        }
+
+        .dynamic-list-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+        
+        .add-item-btn {
+            margin-top: 1rem;
+            align-self: flex-start;
+        }
+
+        /* Remove Item Button */
+        .remove-item-btn {
+            position: absolute;
+            top: 0.6rem;
+            right: 0.6rem;
+            padding: 0.2rem 0.4rem;
+            font-size: 1rem;
+            line-height: 1;
+            background-color: transparent;
+            border: none;
+            color: var(--gray-dark);
+            transition: color 0.2s ease, transform 0.2s ease;
+            z-index: 5;
+            border-radius: 50%;
+            width: 1.8rem;
+            height: 1.8rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .remove-item-btn:hover {
+            color: var(--danger-color);
+            background-color: #f8d7da;
+            transform: scale(1.1);
+        }
+        
+        .remove-item-btn i {
+            vertical-align: middle;
+            display: block;
+        }
+
+        /* Tag/Skills Input */
+        .tags-input-wrapper {
+            margin-bottom: 0.75rem;
+        }
+        
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--gray-mid);
+            border-radius: var(--radius);
+            background-color: white;
+            min-height: calc(1.5em + 1rem + 2px);
+            cursor: text;
+        }
+        
+        .tags-container:focus-within {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.2);
+        }
+
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.25rem 0.625rem;
+            background-color: var(--primary-light);
+            color: var(--primary-dark);
+            border-radius: 0.25rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border: 1px solid var(--primary-color);
+        }
+
+        .tag .tag-remove {
+            cursor: pointer;
+            font-weight: bold;
+            color: var(--primary-dark);
+            opacity: 0.7;
+            transition: opacity 0.2s ease;
+        }
+        
+        .tag .tag-remove:hover {
+            opacity: 1;
+        }
+        
+        .tags-input {
+            border: none;
+            outline: none;
+            padding: 0.25rem 0;
+            flex-grow: 1;
+            min-width: 100px;
+            background: transparent;
+            font-size: 0.95rem;
+        }
+        
+        .tags-input::placeholder {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* Document Card */
+        .document-card {
+            border: 1px solid var(--gray-mid);
+            border-radius: var(--radius);
+            padding: 0;
+            margin-bottom: 0.75rem;
+            transition: border-color 0.2s ease, transform 0.2s ease;
+        }
+        
+        .document-card:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        .document-card-header {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--gray-mid);
+            background-color: var(--gray-light);
+            border-radius: var(--radius) var(--radius) 0 0;
+        }
+
+        .document-icon {
+            font-size: 1.5rem;
+            margin-right: 0.75rem;
+        }
+
+        .document-info {
+            flex-grow: 1;
+        }
+
+        .document-title {
+            font-weight: 500;
+            margin-bottom: 0.1rem;
+            font-size: 0.95rem;
+        }
+
+        .document-meta {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .document-actions {
+            display: flex;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+        }
+
+        /* File Upload */
+        .file-upload-container {
+            border: 2px dashed var(--gray-mid);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            transition: border-color 0.3s ease, background-color 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .file-upload-container:hover {
+            border-color: var(--primary-color);
+            background-color: var(--primary-light);
+        }
+
+        .file-upload-icon {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 0.75rem;
+        }
+
+        .file-upload-text {
+            font-size: 0.95rem;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+        }
+
+        .file-upload-info {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        /* Upload preview */
+        .upload-preview {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem;
+            background-color: var(--gray-light);
+            border-radius: var(--radius);
+            margin-top: 1rem;
+        }
+
+        .preview-icon {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .preview-info {
+            flex-grow: 1;
+        }
+
+        .preview-name {
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .preview-meta {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .preview-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            font-weight: 500;
+            line-height: 1.5;
+            text-align: center;
+            vertical-align: middle;
+            cursor: pointer;
+            user-select: none;
+            border: 1px solid transparent;
+            transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+        
+        .btn:focus { box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25); }
+        
+        .btn-sm {
+            padding: 0.35rem 0.7rem;
+            font-size: 0.875rem;
+        }
+        
+        .btn-lg {
+            padding: 0.65rem 1.25rem;
+            font-size: 1.1rem;
+        }
+
+        /* Autosave indicator */
+        .autosave-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-top: 0.625rem;
+        }
+        
+        .autosave-indicator .status-text { font-size: 0.85rem; }
+
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--success-color);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(25, 135, 84, 0.7); }
+            70% { box-shadow: 0 0 0 6px rgba(25, 135, 84, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(25, 135, 84, 0); }
+        }
+
+        /* Tooltips */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Mobile optimization */
+        @media (max-width: 767.98px) {
+            body { font-size: 0.9rem; }
+            .profile-header { flex-direction: column; align-items: center; }
+            .profile-avatar { width: 100px; height: 100px; }
+            .profile-name { text-align: center; }
+            .profile-title { text-align: center; }
+            .profile-meta { justify-content: center; }
+            .section-header { padding: 1rem 1.25rem; }
+            .section-content { padding: 1.25rem; }
+            .section-content.open { padding: 1.25rem; }
+            .form-row { flex-direction: column; gap: 1.25rem; margin-bottom: 1.25rem; }
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <h1>My Profile</h1>
-         <nav>
-            <a href="dashboard.html">Dashboard</a>
-            <a href="profile.html" class="active">My Profile</a>
-            <a href="apply.html?new=true" class="btn btn-light btn-small" style="color: var(--primary-color);">Apply for New Job</a>
+    <div class="page-wrapper">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm sticky-top">
+            <div class="container-fluid">
+                <a class="navbar-brand fw-bold" href="dashboard.html">
+                    <i class="bi bi-briefcase-fill me-2"></i>You Are Not Your User
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="profile.html">Profile</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Job Search</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Applications</a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav ms-auto align-items-center">
+                         <li class="nav-item me-2">
+                            <a class="nav-link btn btn-sm btn-outline-light" href="apply.html?new=true" title="Start a new application">
+                                <i class="bi bi-plus-circle me-1"></i>New Application
+                            </a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="navbarDropdownUser" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-person-circle me-1 fs-5"></i>David Joyner
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownUser">
+                                <li><a class="dropdown-item" href="profile.html"><i class="bi bi-person-lines-fill me-2"></i>My Profile</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="bi bi-gear-fill me-2"></i>Settings</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </nav>
-    </header>
 
-    <main class="container profile-container">
-        <form id="profile-form">
-            <!-- Section for Personal Information -->
-            <section>
-                <h2>Personal Information</h2>
-                <div class="form-group">
-                    <label for="profile-name" class="required">Full Name</label>
-                    <input type="text" id="profile-name" name="name" required>
+        <main class="container my-4">
+            <!-- Profile Header Card -->
+            <div class="card-profile-info">
+                <div class="profile-header">
+                    <img src="/profile_pic.png" alt="David Joyner" class="profile-avatar">
+                    <div>
+                        <h2 class="profile-name">David Joyner, PhD</h2>
+                        <div class="profile-title">Associate Dean for Off-Campus & Special Initiatives</div>
+                        <div class="profile-meta">
+                            <div class="profile-meta-item"><i class="bi bi-geo-alt-fill"></i>Atlanta, GA</div>
+                            <div class="profile-meta-item"><i class="bi bi-envelope-fill"></i>david.joyner@gatech.edu</div>
+                            <div class="profile-meta-item"><i class="bi bi-telephone-fill"></i>(404) 555-1234</div>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="profile-email" class="required">Email</label>
-                    <input type="email" id="profile-email" name="email" required>
+
+                <div id="autosave-indicator" class="autosave-indicator">
+                    <div class="pulse-dot"></div>
+                    <span id="auto-save-status" class="status-text">Autosaved at <span id="last-saved-time">10:42 AM</span></span>
                 </div>
-                <div class="form-group">
-                    <label for="profile-phone">Phone</label>
-                    <input type="tel" id="profile-phone" name="phone" placeholder="e.g., 555-123-4567">
+            </div>
+            
+            <!-- Profile Completeness -->
+            <div class="progress-container">
+                <div class="progress-header">
+                    <h3 class="progress-title">Profile Completeness</h3>
+                    <span id="progress-percentage" class="progress-percentage">90% Complete</span>
                 </div>
-                <div class="form-group">
-                    <label for="profile-location">Location (City, State)</label>
-                    <input type="text" id="profile-location" name="location" placeholder="e.g., Anytown, CA">
+                <div class="progress-bar-container">
+                    <div class="progress">
+                        <div id="profile-progress" class="progress-bar" role="progressbar" style="width: 90%" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
                 </div>
-            </section>
+            </div>
 
-            <!-- Section for Work Experience -->
-            <section>
-                <h2>Work Experience</h2>
-                <div id="work-experience-list" class="dynamic-list-container">
-                    <!-- Work experience items will be loaded/added here -->
-                    <p class="text-muted">No work experience added yet.</p>
+            <!-- Personal Information Section -->
+            <div class="profile-section" id="personal-info-section">
+                <div class="section-header" role="button" aria-expanded="true" aria-controls="content-personal-info">
+                    <div class="section-title">
+                        <i class="bi bi-person-fill icon"></i>
+                        <h3>Personal Information</h3>
+                    </div>
+                    <div class="section-status">
+                        <button type="button" class="toggle-section expanded" aria-label="Collapse Personal Information Section">
+                            <i class="bi bi-chevron-up"></i>
+                        </button>
+                    </div>
                 </div>
-                <button type="button" id="add-experience-btn" class="btn btn-secondary btn-small">Add Experience</button>
-            </section>
-
-            <!-- Section for Education -->
-            <section>
-                <h2>Education</h2>
-                 <div id="education-list" class="dynamic-list-container">
-                    <!-- Education items will be loaded/added here -->
-                     <p class="text-muted">No education added yet.</p>
+                <div id="content-personal-info" class="section-content open">
+                    <div class="form-row">
+                        <div class="form-group form-column">
+                            <label for="profile-name" class="form-label">
+                                Full Name <span class="required-marker">*</span>
+                            </label>
+                            <input type="text" id="profile-name" name="name" class="form-control" value="David Joyner" required>
+                        </div>
+                        <div class="form-group form-column">
+                            <label for="profile-title" class="form-label">
+                                Professional Title
+                            </label>
+                            <input type="text" id="profile-title" name="title" class="form-control" value="Associate Dean for Off-Campus & Special Initiatives">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group form-column">
+                            <label for="profile-email" class="form-label">
+                                Email Address <span class="required-marker">*</span>
+                            </label>
+                            <input type="email" id="profile-email" name="email" class="form-control" value="david.joyner@gatech.edu" required>
+                        </div>
+                        <div class="form-group form-column">
+                            <label for="profile-phone" class="form-label">
+                                Phone Number
+                            </label>
+                            <input type="tel" id="profile-phone" name="phone" class="form-control" value="(404) 555-1234">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group form-column">
+                            <label for="profile-location" class="form-label">
+                                Location (City, State)
+                            </label>
+                            <input type="text" id="profile-location" name="location" class="form-control" value="Atlanta, GA">
+                        </div>
+                        <div class="form-group form-column">
+                            <label for="profile-relocation" class="form-label">
+                                Willing to Relocate
+                            </label>
+                            <select id="profile-relocation" name="relocation" class="form-select">
+                                <option value="yes">Yes, anywhere</option>
+                                <option value="limited" selected>Yes, with limitations</option>
+                                <option value="no">No</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="profile-bio" class="form-label">
+                            Professional Summary
+                        </label>
+                        <textarea id="profile-bio" name="bio" class="form-control" rows="4">Experienced educator and researcher with expertise in computer science education and human-computer interaction. Currently serving as Associate Dean for Off-Campus & Special Initiatives at Georgia Tech's College of Computing, while also holding the Zvi Galil PEACE Chair. Passionate about making computing education more accessible and equitable.</textarea>
+                    </div>
                 </div>
-                <button type="button" id="add-education-btn" class="btn btn-secondary btn-small">Add Education</button>
-            </section>
+            </div>
 
-            <!-- Section for Skills -->
-            <section>
-                <h2>Skills</h2>
-                <div class="form-group">
-                    <label for="profile-skills">Skills</label>
-                    <textarea id="profile-skills" name="skills" rows="4" placeholder="Enter skills relevant to your job search, separated by commas"></textarea>
-                    <small class="text-muted">e.g., JavaScript, Project Management, UX Design, Figma, Data Analysis, Python</small>
+            <!-- Online Presence Section -->
+            <div class="profile-section" id="online-presence-section">
+                <div class="section-header" role="button" aria-expanded="false" aria-controls="content-online-presence">
+                    <div class="section-title">
+                        <i class="bi bi-link-45deg icon"></i>
+                        <h3>Online Presence</h3>
+                    </div>
+                    <div class="section-status">
+                        <button type="button" class="toggle-section" aria-label="Expand Online Presence Section">
+                            <i class="bi bi-chevron-down"></i>
+                        </button>
+                    </div>
                 </div>
-            </section>
+                <div id="content-online-presence" class="section-content">
+                    <div class="form-row">
+                        <div class="form-group form-column">
+                            <label for="profile-portfolio" class="form-label">
+                                Portfolio/Website
+                            </label>
+                            <input type="url" id="profile-portfolio" name="portfolio" class="form-control" value="https://davidjoyner.design">
+                            <small class="form-helper">Your personal website or online portfolio</small>
+                        </div>
+                        <div class="form-group form-column">
+                            <label for="profile-linkedin" class="form-label">
+                                LinkedIn
+                            </label>
+                            <input type="url" id="profile-linkedin" name="linkedin" class="form-control" value="https://linkedin.com/in/david-joyner">
+                            <small class="form-helper">Your LinkedIn profile URL</small>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group form-column">
+                            <label for="profile-github" class="form-label">
+                                GitHub
+                            </label>
+                            <input type="url" id="profile-github" name="github" class="form-control" value="https://github.com/davidjoyneratl">
+                            <small class="form-helper">Your GitHub profile URL</small>
+                        </div>
+                        <div class="form-group form-column">
+                            <label for="profile-other-social" class="form-label">
+                                Other Social/Professional Profile
+                            </label>
+                            <input type="url" id="profile-other-social" name="other_social" class="form-control" value="">
+                            <small class="form-helper">Twitter, Medium, Dribbble, Behance, etc.</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-            <!-- Save Button and Status -->
-             <div style="margin-top: 2rem; border-top: 1px solid #eee; padding-top: 1.5rem;">
-                <button type="submit" class="btn btn-primary btn-large">Save Profile</button>
-                <p id="profile-save-status" class="status-message"></p>
-             </div>
-        </form>
+            <!-- Work Experience Section -->
+            <div class="profile-section" id="work-experience-section">
+                <div class="section-header" role="button" aria-expanded="false" aria-controls="content-work-experience">
+                    <div class="section-title">
+                        <i class="bi bi-briefcase-fill icon"></i>
+                        <h3>Work Experience</h3>
+                    </div>
+                    <div class="section-status">
+                        <button type="button" class="toggle-section" aria-label="Expand Work Experience Section">
+                            <i class="bi bi-chevron-down"></i>
+                        </button>
+                    </div>
+                </div>
+                <div id="content-work-experience" class="section-content">
+                    <p class="form-helper mb-3">Your work history is key for employers to understand your qualifications. Add all relevant positions, with most recent ones first.</p>
+                    
+                    <div id="work-experience-list" class="dynamic-list-container">
+                        <!-- Work Experience 1 -->
+                        <div class="card-nested">
+                            <button type="button" class="remove-item-btn" title="Remove Experience"><i class="bi bi-x-lg"></i></button>
+                            <div class="form-row">
+                                <div class="form-group form-column">
+                                    <label class="form-label">Job Title <span class="required-marker">*</span></label>
+                                    <input type="text" name="jobTitle" class="form-control" value="Associate Dean for Off-Campus & Special Initiatives" required>
+                                </div>
+                                <div class="form-group form-column">
+                                    <label class="form-label">Company <span class="required-marker">*</span></label>
+                                    <input type="text" name="company" class="form-control" value="College of Computing at Georgia Tech" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group form-column">
+                                    <label class="form-label">Start Date <span class="required-marker">*</span></label>
+                                    <input type="month" name="startDate" class="form-control" value="2025-01" required>
+                                </div>
+                                <div class="form-group form-column">
+                                    <label class="form-label">End Date</label>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <input type="month" name="endDate" class="form-control" disabled>
+                                        <div class="form-check form-switch ms-2">
+                                            <input class="form-check-input" type="checkbox" role="switch" id="currentJob1" checked>
+                                            <label class="form-check-label" for="currentJob1">Current Position</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Location</label>
+                                <input type="text" name="location" class="form-control" value="Atlanta, Georgia, United States">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Description / Responsibilities</label>
+                                <textarea name="description" class="form-control" rows="3">Overseeing online, off-campus, and other special initiatives for the College of Computing.</textarea>
+                            </div>
+                        </div>
+                        
+                        <!-- Work Experience 2 -->
+                        <div class="card-nested">
+                            <button type="button" class="remove-item-btn" title="Remove Experience"><i class="bi bi-x-lg"></i></button>
+                            <div class="form-row">
+                                <div class="form-group form-column">
+                                    <label class="form-label">Job Title <span class="required-marker">*</span></label>
+                                    <input type="text" name="jobTitle" class="form-control" value="Zvi Galil PEACE Chair" required>
+                                </div>
+                                <div class="form-group form-column">
+                                    <label class="form-label">Company <span class="required-marker">*</span></label>
+                                    <input type="text" name="company" class="form-control" value="College of Computing at Georgia Tech" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group form-column">
+                                    <label class="form-label">Start Date <span class="required-marker">*</span></label>
+                                    <input type="month" name="startDate" class="form-control" value="2023-09" required>
+                                </div>
+                                <div class="form-group form-column">
+                                    <label class="form-label">End Date</label>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <input type="month" name="endDate" class="form-control" disabled>
+                                        <div class="form-check form-switch ms-2">
+                                            <input class="form-check-input" type="checkbox" role="switch" id="currentJob2" checked>
+                                            <label class="form-check-label" for="currentJob2">Current Position</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Location</label>
+                                <input type="text" name="location" class="form-control" value="Atlanta, Georgia, United States">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Description / Responsibilities</label>
+                                <textarea name="description" class="form-control" rows="3">Inaugural holder of the newly endowed Zvi Galil PEACE (Pervasive Equitable Access for Computing Education) Chair.</textarea>
+                            </div>
+                        </div>
+                        
+                        <!-- Work Experience 3 -->
+                        <div class="card-nested">
+                            <button type="button" class="remove-item-btn" title="Remove Experience"><i class="bi bi-x-lg"></i></button>
+                            <div class="form-row">
+                                <div class="form-group form-column">
+                                    <label class="form-label">Job Title <span class="required-marker">*</span></label>
+                                    <input type="text" name="jobTitle" class="form-control" value="Principal Research Associate" required>
+                                </div>
+                                <div class="form-group form-column">
+                                    <label class="form-label">Company <span class="required-marker">*</span></label>
+                                    <input type="text" name="company" class="form-control" value="College of Computing at Georgia Tech" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group form-column">
+                                    <label class="form-label">Start Date <span class="required-marker">*</span></label>
+                                    <input type="month" name="startDate" class="form-control" value="2023-07" required>
+                                </div>
+                                <div class="form-group form-column">
+                                    <label class="form-label">End Date</label>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <input type="month" name="endDate" class="form-control" disabled>
+                                        <div class="form-check form-switch ms-2">
+                                            <input class="form-check-input" type="checkbox" role="switch" id="currentJob3" checked>
+                                            <label class="form-check-label" for="currentJob3">Current Position</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Location</label>
+                                <input type="text" name="location" class="form-control" value="Atlanta, Georgia, United States">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Description / Responsibilities</label>
+                                <textarea name="description" class="form-control" rows="3">Leading research initiatives in computing education and human-centered computing.</textarea>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="button" class="btn btn-outline-primary btn-sm add-item-btn" id="add-experience-btn">
+                        <i class="bi bi-plus-circle me-1"></i> Add Another Experience
+                    </button>
+                </div>
+            </div>
 
-        <!-- Section for Resume Management -->
-        <section id="resume-management">
-            <h2>Resume Management (Simulated)</h2>
-            <p class="text-muted" style="margin-bottom: 1rem;">Upload a resume to quickly pre-fill parts of your profile. This is a simulation only.</p>
-             <div class="form-group file-input-group">
-                <input type="file" id="resume-upload-input" accept=".pdf,.doc,.docx" class="hidden"> <!-- Hidden input -->
-                <button type="button" id="resume-upload-btn" class="btn btn-secondary">Choose Resume File</button>
-                <span id="resume-file-name" class="file-name-display">No file chosen</span>
-             </div>
-            <button type="button" id="parse-resume-btn" class="btn btn-info">Parse Resume & Pre-fill Profile</button>
-            <p id="parse-status" class="status-message"></p>
-        </section>
+            <!-- Education Section -->
+            <div class="profile-section" id="education-section">
+                <div class="section-header" role="button" aria-expanded="false" aria-controls="content-education">
+                    <div class="section-title">
+                        <i class="bi bi-mortarboard-fill icon"></i>
+                        <h3>Education</h3>
+                    </div>
+                    <div class="section-status">
+                        <button type="button" class="toggle-section" aria-label="Expand Education Section">
+                            <i class="bi bi-chevron-down"></i>
+                        </button>
+                    </div>
+                </div>
+                <div id="content-education" class="section-content">
+                    <p class="form-helper mb-3">Add your educational background, especially degrees relevant to the positions you're applying for.</p>
+                    
+                    <div id="education-list" class="dynamic-list-container">
+                        <!-- Education 1 -->
+                        <div class="card-nested">
+                            <button type="button" class="remove-item-btn" title="Remove Education"><i class="bi bi-x-lg"></i></button>
+                            <div class="form-row">
+                                <div class="form-group form-column">
+                                    <label class="form-label">Institution <span class="required-marker">*</span></label>
+                                    <input type="text" name="institution" class="form-control" value="Georgia Institute of Technology" required>
+                                </div>
+                                <div class="form-group form-column">
+                                    <label class="form-label">Degree <span class="required-marker">*</span></label>
+                                    <input type="text" name="degree" class="form-control" value="Doctor of Philosophy (Ph.D.)" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group form-column">
+                                    <label class="form-label">Field of Study</label>
+                                    <input type="text" name="fieldOfStudy" class="form-control" value="Human-Centered Computing">
+                                </div>
+                                <div class="form-group form-column">
+                                    <label class="form-label">GPA (Optional)</label>
+                                    <input type="text" name="gpa" class="form-control" value="4.0">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group form-column">
+                                    <label class="form-label">Start Year</label>
+                                    <input type="number" name="startYear" class="form-control" value="2009">
+                                </div>
+                                <div class="form-group form-column">
+                                    <label class="form-label">End Year (Graduation)</label>
+                                    <input type="number" name="endYear" class="form-control" value="2015">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Location</label>
+                                <input type="text" name="eduLocation" class="form-control" value="Atlanta, GA">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Description</label>
+                                <textarea name="eduDescription" class="form-control" rows="3">Completed my Ph.D. in Human-Centered Computing in December 2014 with my dissertation titled "Metacognitive Tutoring for Inquiry-Driven Modeling." Specialized in Learning Science & Technology.</textarea>
+                            </div>
+                        </div>
+                        
+                        <!-- Education 2 -->
+                        <div class="card-nested">
+                            <button type="button" class="remove-item-btn" title="Remove Education"><i class="bi bi-x-lg"></i></button>
+                            <div class="form-row">
+                                <div class="form-group form-column">
+                                    <label class="form-label">Institution <span class="required-marker">*</span></label>
+                                    <input type="text" name="institution" class="form-control" value="Georgia Institute of Technology" required>
+                                </div>
+                                <div class="form-group form-column">
+                                    <label class="form-label">Degree <span class="required-marker">*</span></label>
+                                    <input type="text" name="degree" class="form-control" value="Master's Degree" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group form-column">
+                                    <label class="form-label">Field of Study</label>
+                                    <input type="text" name="fieldOfStudy" class="form-control" value="Human-Computer Interaction">
+                                </div>
+                                <div class="form-group form-column">
+                                    <label class="form-label">GPA (Optional)</label>
+                                    <input type="text" name="gpa" class="form-control" value="4.0">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group form-column">
+                                    <label class="form-label">Start Year</label>
+                                    <input type="number" name="startYear" class="form-control" value="2008">
+                                </div>
+                                <div class="form-group form-column">
+                                    <label class="form-label">End Year (Graduation)</label>
+                                    <input type="number" name="endYear" class="form-control" value="2009">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Location</label>
+                                <input type="text" name="eduLocation" class="form-control" value="Atlanta, GA">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Description</label>
+                                <textarea name="eduDescription" class="form-control" rows="3">Completed my Master of Science in Human-Computer Interaction with my final project on "A Language-Neutral Assessment for Introductory CS Knowledge."</textarea>
+                            </div>
+                        </div>
+                        
+                        <!-- Education 3 -->
+                        <div class="card-nested">
+                            <button type="button" class="remove-item-btn" title="Remove Education"><i class="bi bi-x-lg"></i></button>
+                            <div class="form-row">
+                                <div class="form-group form-column">
+                                    <label class="form-label">Institution <span class="required-marker">*</span></label>
+                                    <input type="text" name="institution" class="form-control" value="Georgia Institute of Technology" required>
+                                </div>
+                                <div class="form-group form-column">
+                                    <label class="form-label">Degree <span class="required-marker">*</span></label>
+                                    <input type="text" name="degree" class="form-control" value="Bachelor's Degree" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group form-column">
+                                    <label class="form-label">Field of Study</label>
+                                    <input type="text" name="fieldOfStudy" class="form-control" value="Computer Science">
+                                </div>
+                                <div class="form-group form-column">
+                                    <label class="form-label">GPA (Optional)</label>
+                                    <input type="text" name="gpa" class="form-control" value="3.95">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group form-column">
+                                    <label class="form-label">Start Year</label>
+                                    <input type="number" name="startYear" class="form-control" value="2005">
+                                </div>
+                                <div class="form-group form-column">
+                                    <label class="form-label">End Year (Graduation)</label>
+                                    <input type="number" name="endYear" class="form-control" value="2008">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Location</label>
+                                <input type="text" name="eduLocation" class="form-control" value="Atlanta, GA">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Description</label>
+                                <textarea name="eduDescription" class="form-control" rows="3">Completed my Bachelor of Science in Computer Science with my final research capstone on "Investigating the Effects of Variously Moded Educational Materials on Learning." Specialized in People & Media.</textarea>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="button" class="btn btn-outline-primary btn-sm add-item-btn" id="add-education-btn">
+                        <i class="bi bi-plus-circle me-1"></i> Add Another Education
+                    </button>
+                </div>
+            </div>
 
-        <!-- Section for Document Locker -->
-        <section id="document-locker">
-            <h2>Document Locker</h2>
-            <p class="text-muted" style="margin-bottom: 1rem;">Store frequently used documents like resumes, cover letter templates, or certificates here. They can be attached to applications.</p>
-            <ul id="document-list">
-                <!-- Documents will be listed here -->
-                <li>Loading documents...</li>
-            </ul>
-             <div class="form-group file-input-group">
-                 <input type="file" id="doc-upload-input" accept=".pdf,.doc,.docx,.jpg,.png,.txt" class="hidden"> <!-- Hidden input -->
-                 <button type="button" id="doc-upload-btn" class="btn btn-secondary">Choose Document</button>
-                 <span id="doc-file-name" class="file-name-display">No file chosen</span>
-                 <button type="button" id="add-doc-btn" class="btn btn-success btn-small">Add to Locker</button>
-             </div>
-              <p id="doc-upload-status" class="status-message"></p>
-        </section>
+            <!-- Skills Section -->
+            <div class="profile-section" id="skills-section">
+                <div class="section-header" role="button" aria-expanded="false" aria-controls="content-skills">
+                    <div class="section-title">
+                        <i class="bi bi-stars icon"></i>
+                        <h3>Skills & Expertise</h3>
+                    </div>
+                    <div class="section-status">
+                        <button type="button" class="toggle-section" aria-label="Expand Skills Section">
+                            <i class="bi bi-chevron-down"></i>
+                        </button>
+                    </div>
+                </div>
+                <div id="content-skills" class="section-content">
+                    <p class="form-helper mb-3">List your technical and soft skills that are relevant to your target positions. These may be used for keyword matching by employers.</p>
+                    
+                    <div class="form-group">
+                        <label for="profile-skills" class="form-label">Professional Skills</label>
+                        <div class="tags-input-wrapper">
+                            <div class="tags-container" onclick="this.querySelector('.tags-input').focus()">
+                                <span class="tag">UX Design <span class="tag-remove" title="Remove skill">×</span></span>
+                                <span class="tag">UI Design <span class="tag-remove" title="Remove skill">×</span></span>
+                                <span class="tag">Figma <span class="tag-remove" title="Remove skill">×</span></span>
+                                <span class="tag">Sketch <span class="tag-remove" title="Remove skill">×</span></span>
+                                <span class="tag">User Research <span class="tag-remove" title="Remove skill">×</span></span>
+                                <span class="tag">Prototyping <span class="tag-remove" title="Remove skill">×</span></span>
+                                <span class="tag">Usability Testing <span class="tag-remove" title="Remove skill">×</span></span>
+                                <span class="tag">Information Architecture <span class="tag-remove" title="Remove skill">×</span></span>
+                                <span class="tag">Wireframing <span class="tag-remove" title="Remove skill">×</span></span>
+                                <span class="tag">Design Systems <span class="tag-remove" title="Remove skill">×</span></span>
+                                <span class="tag">Accessibility (WCAG) <span class="tag-remove" title="Remove skill">×</span></span>
+                                <span class="tag">User Journey Mapping <span class="tag-remove" title="Remove skill">×</span></span>
+                                <input type="text" class="tags-input" id="profile-skills-input" placeholder="Add a skill...">
+                            </div>
+                        </div>
+                        <input type="hidden" id="profile-skills" name="skills" value="UX Design, UI Design, Figma, Sketch, User Research, Prototyping, Usability Testing, Information Architecture, Wireframing, Design Systems, Accessibility (WCAG), User Journey Mapping">
+                        <small class="form-helper">Enter skills separated by comma or press Enter to add</small>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group form-column">
+                            <label for="profile-languages" class="form-label">Languages</label>
+                            <input type="text" id="profile-languages" name="languages" class="form-control" value="English (Native), Spanish (Basic)">
+                            <small class="form-helper">Languages you speak and proficiency level</small>
+                        </div>
+                        <div class="form-group form-column">
+                            <label for="profile-certifications" class="form-label">Certifications</label>
+                            <input type="text" id="profile-certifications" name="certifications" class="form-control" value="UX Certification, WCAG Accessibility">
+                            <small class="form-helper">Professional certifications relevant to your field</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-    </main>
+            <!-- Documents Section -->
+            <div class="profile-section" id="documents-section">
+                <div class="section-header" role="button" aria-expanded="false" aria-controls="content-documents">
+                    <div class="section-title">
+                        <i class="bi bi-file-earmark-text icon"></i>
+                        <h3>Document Locker</h3>
+                    </div>
+                    <div class="section-status">
+                        <button type="button" class="toggle-section" aria-label="Expand Documents Section">
+                            <i class="bi bi-chevron-down"></i>
+                        </button>
+                    </div>
+                </div>
+                <div id="content-documents" class="section-content">
+                    <p class="form-helper mb-3">Store frequently used documents like resumes, cover letters, and certificates. These can be attached to job applications.</p>
+                    
+                    <!-- File Upload Section -->
+                    <div class="file-upload-container" id="file-upload-area">
+                        <div class="file-upload-icon">
+                            <i class="bi bi-cloud-arrow-up"></i>
+                        </div>
+                        <div class="file-upload-text">
+                            <strong>Drag & drop files here</strong> or click to browse
+                        </div>
+                        <div class="file-upload-info">
+                            Supported formats: PDF, DOCX, JPG, PNG (Max 10MB)
+                        </div>
+                        <input type="file" id="document-upload" class="d-none">
+                    </div>
+                    
+                    <!-- Documents List -->
+                    <div class="document-list">
+                        <!-- Document 1 -->
+                        <div class="document-card">
+                            <div class="document-card-header">
+                                <div class="document-icon text-danger">
+                                    <i class="bi bi-file-earmark-pdf"></i>
+                                </div>
+                                <div class="document-info">
+                                    <div class="document-title">David_Joyner_Resume_2024.pdf</div>
+                                    <div class="document-meta">Resume • 290 KB • Updated Apr 1, 2024</div>
+                                </div>
+                            </div>
+                            <div class="document-actions">
+                                <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-eye me-1"></i>View</button>
+                                <button class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil me-1"></i>Replace</button>
+                                <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash me-1"></i>Delete</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Document 2 -->
+                        <div class="document-card">
+                            <div class="document-card-header">
+                                <div class="document-icon text-primary">
+                                    <i class="bi bi-file-earmark-word"></i>
+                                </div>
+                                <div class="document-info">
+                                    <div class="document-title">UX_Designer_Cover_Letter_Salesforce.docx</div>
+                                    <div class="document-meta">Cover Letter • 124 KB • Updated Apr 5, 2024</div>
+                                </div>
+                            </div>
+                            <div class="document-actions">
+                                <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-eye me-1"></i>View</button>
+                                <button class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil me-1"></i>Replace</button>
+                                <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash me-1"></i>Delete</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Document 3 -->
+                        <div class="document-card">
+                            <div class="document-card-header">
+                                <div class="document-icon text-danger">
+                                    <i class="bi bi-file-earmark-pdf"></i>
+                                </div>
+                                <div class="document-info">
+                                    <div class="document-title">UX_Portfolio_Highlights_2024.pdf</div>
+                                    <div class="document-meta">Portfolio Sample • 4.2 MB • Updated Mar 15, 2024</div>
+                                </div>
+                            </div>
+                            <div class="document-actions">
+                                <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-eye me-1"></i>View</button>
+                                <button class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil me-1"></i>Replace</button>
+                                <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash me-1"></i>Delete</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Document 4 -->
+                        <div class="document-card">
+                            <div class="document-card-header">
+                                <div class="document-icon text-success">
+                                    <i class="bi bi-file-earmark-zip"></i>
+                                </div>
+                                <div class="document-info">
+                                    <div class="document-title">Design_Certificates.zip</div>
+                                    <div class="document-meta">Certificates • 1.8 MB • Updated Feb 10, 2024</div>
+                                </div>
+                            </div>
+                            <div class="document-actions">
+                                <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-eye me-1"></i>View</button>
+                                <button class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil me-1"></i>Replace</button>
+                                <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash me-1"></i>Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-    <footer>
-        <p>Team Project - Final Prototype</p>
-    </footer>
+            <!-- Job Preferences Section -->
+            <div class="profile-section" id="job-preferences-section">
+                <div class="section-header" role="button" aria-expanded="false" aria-controls="content-job-preferences">
+                    <div class="section-title">
+                        <i class="bi bi-briefcase icon"></i>
+                        <h3>Job Preferences</h3>
+                    </div>
+                    <div class="section-status">
+                        <button type="button" class="toggle-section" aria-label="Expand Job Preferences Section">
+                            <i class="bi bi-chevron-down"></i>
+                        </button>
+                    </div>
+                </div>
+                <div id="content-job-preferences" class="section-content">
+                    <p class="form-helper mb-3">Set preferences to help us match you with relevant job opportunities.</p>
+                    
+                    <div class="form-row">
+                        <div class="form-group form-column">
+                            <label class="form-label">Job Titles You're Interested In</label>
+                            <div class="tags-input-wrapper">
+                                <div class="tags-container" onclick="this.querySelector('.tags-input').focus()">
+                                    <span class="tag">UX Designer <span class="tag-remove" title="Remove job title">×</span></span>
+                                    <span class="tag">Product Designer <span class="tag-remove" title="Remove job title">×</span></span>
+                                    <span class="tag">UI Designer <span class="tag-remove" title="Remove job title">×</span></span>
+                                    <span class="tag">Senior UX Designer <span class="tag-remove" title="Remove job title">×</span></span>
+                                    <input type="text" class="tags-input" id="job-titles-input" placeholder="Add a job title...">
+                                </div>
+                            </div>
+                            <input type="hidden" id="job-titles" name="job_titles" value="UX Designer, Product Designer, UI Designer, Senior UX Designer">
+                        </div>
+                        <div class="form-group form-column">
+                            <label class="form-label">Preferred Industries</label>
+                            <div class="tags-input-wrapper">
+                                <div class="tags-container" onclick="this.querySelector('.tags-input').focus()">
+                                    <span class="tag">Technology <span class="tag-remove" title="Remove industry">×</span></span>
+                                    <span class="tag">Education <span class="tag-remove" title="Remove industry">×</span></span>
+                                    <span class="tag">Software <span class="tag-remove" title="Remove industry">×</span></span>
+                                    <input type="text" class="tags-input" id="industries-input" placeholder="Add an industry...">
+                                </div>
+                            </div>
+                            <input type="hidden" id="industries" name="industries" value="Technology, Education, Software">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group form-column">
+                            <label for="employment-type" class="form-label">Employment Type</label>
+                            <select id="employment-type" name="employment_type" class="form-select">
+                                <option value="">No preference</option>
+                                <option value="full-time" selected>Full-time</option>
+                                <option value="part-time">Part-time</option>
+                                <option value="contract">Contract</option>
+                                <option value="freelance">Freelance</option>
+                                <option value="internship">Internship</option>
+                            </select>
+                        </div>
+                        <div class="form-group form-column">
+                            <label for="job-level" class="form-label">Job Level</label>
+                            <select id="job-level" name="job_level" class="form-select">
+                                <option value="">No preference</option>
+                                <option value="entry">Entry level</option>
+                                <option value="mid">Mid-level</option>
+                                <option value="senior" selected>Senior level</option>
+                                <option value="manager">Manager</option>
+                                <option value="director">Director</option>
+                                <option value="executive">Executive</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group form-column">
+                            <label for="work-location" class="form-label">Preferred Work Location</label>
+                            <select id="work-location" name="work_location" class="form-select">
+                                <option value="">No preference</option>
+                                <option value="onsite">On-site</option>
+                                <option value="hybrid" selected>Hybrid</option>
+                                <option value="remote">Remote</option>
+                            </select>
+                        </div>
+                        <div class="form-group form-column">
+                            <label for="expected-salary" class="form-label">Expected Salary Range</label>
+                            <input type="text" id="expected-salary" name="expected_salary" class="form-control" value="$130,000 - $160,000">
+                            <small class="form-helper">Optional. Helps match you with appropriate opportunities.</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-    <!-- TEMPLATES for Dynamic Lists -->
+            <!-- Save Profile Button -->
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-5">
+                <button type="button" id="save-as-draft-btn" class="btn btn-outline-secondary">
+                    <i class="bi bi-save me-1"></i> Save as Draft
+                </button>
+                <button type="button" id="save-profile-btn" class="btn btn-primary btn-lg">
+                    <i class="bi bi-check-circle me-1"></i> Save Profile
+                </button>
+            </div>
+        </main>
+
+        <footer class="bg-light py-3 border-top mt-auto">
+            <div class="container">
+                <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center text-center text-sm-start">
+                    <p class="mb-2 mb-sm-0 text-muted">&copy; 2024 You Are Not Your User</p>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-muted text-decoration-none">Privacy</a>
+                        <a href="#" class="text-muted text-decoration-none">Terms</a>
+                        <a href="#" class="text-muted text-decoration-none">Help</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Templates for Dynamic Elements -->
     <template id="work-experience-template">
-        <div class="experience-item">
-            <button type="button" class="btn btn-danger btn-small remove-item-btn" title="Remove Experience">&times;</button>
-            <div class="form-group">
-                <label for="jobTitle" class="required">Job Title</label>
-                <input type="text" name="jobTitle" required>
+        <div class="card-nested">
+            <button type="button" class="remove-item-btn" title="Remove Experience"><i class="bi bi-x-lg"></i></button>
+            <div class="form-row">
+                <div class="form-group form-column">
+                    <label class="form-label">Job Title <span class="required-marker">*</span></label>
+                    <input type="text" name="jobTitle" class="form-control" required>
+                </div>
+                <div class="form-group form-column">
+                    <label class="form-label">Company <span class="required-marker">*</span></label>
+                    <input type="text" name="company" class="form-control" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group form-column">
+                    <label class="form-label">Start Date <span class="required-marker">*</span></label>
+                    <input type="month" name="startDate" class="form-control" required>
+                </div>
+                <div class="form-group form-column">
+                    <label class="form-label">End Date</label>
+                    <div class="d-flex align-items-center gap-2">
+                        <input type="month" name="endDate" class="form-control">
+                        <div class="form-check form-switch ms-2">
+                            <input class="form-check-input" type="checkbox" role="switch" name="currentJob">
+                            <label class="form-check-label">Current Position</label>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="form-group">
-                <label for="company" class="required">Company</label>
-                <input type="text" name="company" required>
+                <label class="form-label">Location</label>
+                <input type="text" name="location" class="form-control" placeholder="e.g., Atlanta, GA or Remote">
             </div>
             <div class="form-group">
-                <label for="duration">Duration</label>
-                <input type="text" name="duration" placeholder="e.g., Jan 2021 - Present or Mar 2020 - Dec 2022">
-            </div>
-            <div class="form-group">
-                <label for="description">Description / Responsibilities</label>
-                <textarea name="description" rows="3" placeholder="Briefly describe your key responsibilities and achievements"></textarea>
+                <label class="form-label">Description / Responsibilities</label>
+                <textarea name="description" class="form-control" rows="3" placeholder="Briefly describe your key responsibilities and achievements in this role"></textarea>
             </div>
         </div>
     </template>
 
     <template id="education-template">
-        <div class="education-item">
-             <button type="button" class="btn btn-danger btn-small remove-item-btn" title="Remove Education">&times;</button>
-             <div class="form-group">
-                <label for="institution" class="required">Institution</label>
-                <input type="text" name="institution" required>
+        <div class="card-nested">
+            <button type="button" class="remove-item-btn" title="Remove Education"><i class="bi bi-x-lg"></i></button>
+            <div class="form-row">
+                <div class="form-group form-column">
+                    <label class="form-label">Institution <span class="required-marker">*</span></label>
+                    <input type="text" name="institution" class="form-control" required>
+                </div>
+                <div class="form-group form-column">
+                    <label class="form-label">Degree <span class="required-marker">*</span></label>
+                    <input type="text" name="degree" class="form-control" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group form-column">
+                    <label class="form-label">Field of Study</label>
+                    <input type="text" name="fieldOfStudy" class="form-control" placeholder="e.g., Computer Science, Business Administration">
+                </div>
+                <div class="form-group form-column">
+                    <label class="form-label">GPA (Optional)</label>
+                    <input type="text" name="gpa" class="form-control" placeholder="e.g., 3.8/4.0">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group form-column">
+                    <label class="form-label">Start Year</label>
+                    <input type="number" name="startYear" class="form-control" placeholder="e.g., 2010">
+                </div>
+                <div class="form-group form-column">
+                    <label class="form-label">End Year (Graduation)</label>
+                    <input type="number" name="endYear" class="form-control" placeholder="e.g., 2014">
+                </div>
             </div>
             <div class="form-group">
-                <label for="degree">Degree / Field of Study</label>
-                <input type="text" name="degree" placeholder="e.g., B.S. Computer Science">
+                <label class="form-label">Location</label>
+                <input type="text" name="eduLocation" class="form-control" placeholder="e.g., Boston, MA">
             </div>
             <div class="form-group">
-                <label for="eduDuration">Duration / Graduation Date</label>
-                <input type="text" name="eduDuration" placeholder="e.g., 2018 - 2022 or Graduated May 2023">
+                <label class="form-label">Description</label>
+                <textarea name="eduDescription" class="form-control" rows="3" placeholder="Honors, awards, relevant coursework, thesis, etc."></textarea>
             </div>
         </div>
     </template>
 
-    <!-- Load Scripts -->
-    <script src="js/data.js"></script>
-    <script src="js/main.js"></script>
+    <!-- Bootstrap JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Profile Page JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- Section Expand/Collapse Logic ---
+            const sectionHeaders = document.querySelectorAll('.section-header');
+            sectionHeaders.forEach(header => {
+                const section = header.closest('.profile-section');
+                const content = section.querySelector('.section-content');
+                const toggleBtn = header.querySelector('.toggle-section');
+                const icon = toggleBtn.querySelector('i');
+
+                // Initial state based on 'open' class
+                if (content.classList.contains('open')) {
+                    toggleBtn.classList.add('expanded');
+                    icon.classList.remove('bi-chevron-down');
+                    icon.classList.add('bi-chevron-up');
+                    header.setAttribute('aria-expanded', 'true');
+                } else {
+                    toggleBtn.classList.remove('expanded');
+                    icon.classList.remove('bi-chevron-up');
+                    icon.classList.add('bi-chevron-down');
+                    header.setAttribute('aria-expanded', 'false');
+                }
+
+                header.addEventListener('click', function(e) {
+                    // Prevent toggling if click is on the status indicator or button itself
+                    if (e.target.closest('.section-status') && !e.target.closest('.toggle-section')) {
+                        return;
+                    }
+
+                    const isOpen = content.classList.toggle('open');
+                    toggleBtn.classList.toggle('expanded', isOpen);
+                    header.setAttribute('aria-expanded', isOpen);
+
+                    if (isOpen) {
+                        icon.classList.remove('bi-chevron-down');
+                        icon.classList.add('bi-chevron-up');
+                    } else {
+                        icon.classList.remove('bi-chevron-up');
+                        icon.classList.add('bi-chevron-down');
+                    }
+                });
+            });
+
+            // --- Dynamic List Item Logic (Add/Remove) ---
+            function setupDynamicList(listId, templateId, addButtonId) {
+                const container = document.getElementById(listId);
+                const template = document.getElementById(templateId);
+                const addButton = document.getElementById(addButtonId);
+                
+                if (!container || !template || !addButton) return;
+
+                // Add item
+                addButton.addEventListener('click', function() {
+                    const clone = document.importNode(template.content, true);
+                    const newItem = clone.querySelector('.card-nested');
+
+                    // Add remove listener to the new item
+                    newItem.querySelector('.remove-item-btn').addEventListener('click', function() {
+                        if (confirm('Are you sure you want to remove this item?')) {
+                            newItem.remove();
+                        }
+                    });
+
+                    container.appendChild(clone);
+                    newItem.querySelector('input')?.focus(); // Focus first input
+                });
+
+                // Add remove listener to existing items
+                container.querySelectorAll('.card-nested').forEach(item => {
+                    item.querySelector('.remove-item-btn')?.addEventListener('click', function() {
+                        if (confirm('Are you sure you want to remove this item?')) {
+                            item.remove();
+                        }
+                    });
+                });
+                
+                // Add event listeners for "Current Position" checkboxes
+                container.querySelectorAll('input[type="checkbox"][name="currentJob"], input[type="checkbox"][id^="currentJob"]').forEach(checkbox => {
+                    const endDateInput = checkbox.closest('.form-column').querySelector('input[type="month"]');
+                    
+                    // Set initial state
+                    if (checkbox.checked) {
+                        endDateInput.disabled = true;
+                    }
+                    
+                    // Add change event listener
+                    checkbox.addEventListener('change', function() {
+                        endDateInput.disabled = this.checked;
+                        if (this.checked) {
+                            endDateInput.value = '';
+                        }
+                    });
+                });
+            }
+
+            setupDynamicList('work-experience-list', 'work-experience-template', 'add-experience-btn');
+            setupDynamicList('education-list', 'education-template', 'add-education-btn');
+
+            // --- Skills Tag Input Logic ---
+            function setupTagsInput(containerSelector, hiddenInputId) {
+                const tagsContainer = document.querySelector(containerSelector);
+                const tagsInput = tagsContainer?.querySelector('.tags-input');
+                const hiddenSkillsInput = document.getElementById(hiddenInputId);
+                
+                if (!tagsContainer || !tagsInput || !hiddenSkillsInput) return;
+
+                function renderTags() {
+                    // Clear existing tags except input
+                    tagsContainer.querySelectorAll('.tag').forEach(tagEl => tagEl.remove());
+                    const skills = hiddenSkillsInput.value.split(',').map(s => s.trim()).filter(s => s);
+
+                    skills.forEach(skill => {
+                        const tagEl = document.createElement('span');
+                        tagEl.className = 'tag';
+                        tagEl.innerHTML = `${skill} <span class="tag-remove" title="Remove skill">×</span>`;
+                        tagEl.querySelector('.tag-remove').addEventListener('click', (e) => {
+                            e.stopPropagation(); // Prevent container click focus
+                            removeSkill(skill);
+                        });
+                        tagsContainer.insertBefore(tagEl, tagsInput);
+                    });
+                }
+
+                function addSkill(skill) {
+                    skill = skill.trim();
+                    if (!skill || hiddenSkillsInput.value.split(',').map(s => s.trim().toLowerCase()).includes(skill.toLowerCase())) {
+                        return; // Prevent duplicates or empty
+                    }
+                    const currentSkills = hiddenSkillsInput.value.split(',').map(s => s.trim()).filter(s => s);
+                    currentSkills.push(skill);
+                    hiddenSkillsInput.value = currentSkills.join(', ');
+                    renderTags();
+                }
+
+                function removeSkill(skill) {
+                    let currentSkills = hiddenSkillsInput.value.split(',').map(s => s.trim()).filter(s => s);
+                    currentSkills = currentSkills.filter(s => s.toLowerCase() !== skill.toLowerCase());
+                    hiddenSkillsInput.value = currentSkills.join(', ');
+                    renderTags();
+                }
+
+                tagsInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ',') {
+                        e.preventDefault();
+                        addSkill(tagsInput.value);
+                        tagsInput.value = '';
+                    } else if (e.key === 'Backspace' && tagsInput.value === '') {
+                        // Remove last tag on backspace if input is empty
+                        const lastTag = tagsContainer.querySelector('.tag:last-of-type');
+                        if (lastTag) {
+                            removeSkill(lastTag.textContent.replace('×','').trim());
+                        }
+                    }
+                });
+
+                tagsInput.addEventListener('blur', () => { // Add tag on blur if there's text
+                    if (tagsInput.value.trim()) {
+                        addSkill(tagsInput.value);
+                        tagsInput.value = '';
+                    }
+                });
+
+                // Initial render
+                renderTags();
+            }
+
+            // Initialize tags inputs
+            setupTagsInput('.tags-container', 'profile-skills');
+            setupTagsInput('[id="job-titles-input"]', 'job-titles');
+            setupTagsInput('[id="industries-input"]', 'industries');
+
+            // --- File Upload Area ---
+            const uploadArea = document.getElementById('file-upload-area');
+            const uploadInput = document.getElementById('document-upload');
+            
+            if (uploadArea && uploadInput) {
+                uploadArea.addEventListener('click', () => {
+                    uploadInput.click();
+                });
+                
+                uploadArea.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    uploadArea.classList.add('bg-light');
+                });
+                
+                uploadArea.addEventListener('dragleave', () => {
+                    uploadArea.classList.remove('bg-light');
+                });
+                
+                uploadArea.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    uploadArea.classList.remove('bg-light');
+                    const files = e.dataTransfer.files;
+                    if (files.length) {
+                        handleFileUpload(files[0]); // For demo, just handle one file
+                    }
+                });
+                
+                uploadInput.addEventListener('change', () => {
+                    if (uploadInput.files.length) {
+                        handleFileUpload(uploadInput.files[0]);
+                    }
+                });
+            }
+            
+            function handleFileUpload(file) {
+                // This is a simplified demo function
+                alert(`File "${file.name}" would be uploaded in a real implementation.`);
+                
+                // In a real app, you'd send the file to the server here
+                // For now, we'll just display a success message
+                
+                // Create a new document card (simplified demo)
+                const documentList = document.querySelector('.document-list');
+                const fileType = file.name.split('.').pop().toLowerCase();
+                let iconClass = 'bi-file-earmark';
+                let colorClass = 'text-secondary';
+                
+                if (['pdf'].includes(fileType)) {
+                    iconClass = 'bi-file-earmark-pdf';
+                    colorClass = 'text-danger';
+                } else if (['doc', 'docx'].includes(fileType)) {
+                    iconClass = 'bi-file-earmark-word';
+                    colorClass = 'text-primary';
+                } else if (['jpg', 'jpeg', 'png', 'gif'].includes(fileType)) {
+                    iconClass = 'bi-file-earmark-image';
+                    colorClass = 'text-success';
+                } else if (['zip', 'rar'].includes(fileType)) {
+                    iconClass = 'bi-file-earmark-zip';
+                    colorClass = 'text-success';
+                }
+                
+                const now = new Date();
+                const dateString = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                
+                const newCard = document.createElement('div');
+                newCard.className = 'document-card';
+                newCard.innerHTML = `
+                    <div class="document-card-header">
+                        <div class="document-icon ${colorClass}">
+                            <i class="bi ${iconClass}"></i>
+                        </div>
+                        <div class="document-info">
+                            <div class="document-title">${file.name}</div>
+                            <div class="document-meta">Document • ${(file.size / 1024).toFixed(1)} KB • Added ${dateString}</div>
+                        </div>
+                    </div>
+                    <div class="document-actions">
+                        <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-eye me-1"></i>View</button>
+                        <button class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil me-1"></i>Rename</button>
+                        <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash me-1"></i>Delete</button>
+                    </div>
+                `;
+                
+                documentList.prepend(newCard);
+                
+                // Reset the file input
+                uploadInput.value = '';
+            }
+
+            // --- Save Profile Functionality ---
+            const saveProfileBtn = document.getElementById('save-profile-btn');
+            const saveAsDraftBtn = document.getElementById('save-as-draft-btn');
+            
+            if (saveProfileBtn) {
+                saveProfileBtn.addEventListener('click', function() {
+                    // Simulate saving
+                    this.disabled = true;
+                    this.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Saving...';
+                    
+                    setTimeout(() => {
+                        alert('Profile saved successfully!');
+                        this.disabled = false;
+                        this.innerHTML = '<i class="bi bi-check-circle me-1"></i> Save Profile';
+                        
+                        // Update last saved time
+                        const now = new Date();
+                        const hours = now.getHours();
+                        const minutes = now.getMinutes();
+                        const ampm = hours >= 12 ? 'PM' : 'AM';
+                        const formattedHours = hours % 12 || 12;
+                        const formattedMinutes = minutes.toString().padStart(2, '0');
+                        const lastSavedTimeEl = document.getElementById('last-saved-time');
+                        if (lastSavedTimeEl) {
+                            lastSavedTimeEl.textContent = `${formattedHours}:${formattedMinutes} ${ampm}`;
+                        }
+                    }, 1500);
+                });
+            }
+            
+            if (saveAsDraftBtn) {
+                saveAsDraftBtn.addEventListener('click', function() {
+                    alert('Your profile has been saved as a draft.');
+                    
+                    // Update last saved time
+                    const now = new Date();
+                    const hours = now.getHours();
+                    const minutes = now.getMinutes();
+                    const ampm = hours >= 12 ? 'PM' : 'AM';
+                    const formattedHours = hours % 12 || 12;
+                    const formattedMinutes = minutes.toString().padStart(2, '0');
+                    const lastSavedTimeEl = document.getElementById('last-saved-time');
+                    if (lastSavedTimeEl) {
+                        lastSavedTimeEl.textContent = `${formattedHours}:${formattedMinutes} ${ampm}`;
+                    }
+                });
+            }
+
+            // --- Autosave Simulation ---
+            function simulateAutosave() {
+                const now = new Date();
+                const hours = now.getHours();
+                const minutes = now.getMinutes();
+                const ampm = hours >= 12 ? 'PM' : 'AM';
+                const formattedHours = hours % 12 || 12;
+                const formattedMinutes = minutes.toString().padStart(2, '0');
+                const lastSavedTimeEl = document.getElementById('last-saved-time');
+                if (lastSavedTimeEl) {
+                    lastSavedTimeEl.textContent = `${formattedHours}:${formattedMinutes} ${ampm}`;
+                }
+            }
+
+            // Autosave every 2 minutes
+            setInterval(simulateAutosave, 120000);
+            
+            // Initialize tooltips
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"], [title]'));
+            tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        });
+    </script>
 </body>
 </html>
