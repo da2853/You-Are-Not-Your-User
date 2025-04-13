@@ -3,249 +3,2064 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Title will be set by JS -->
     <title>Apply for Job</title>
-    <link rel="stylesheet" href="css/style.css">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <!-- FontAwesome (for specific icons used in prefilled badge) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-color: #0d6efd;
+            --primary-dark: #0a58ca;
+            --primary-light: #e6f2ff;
+            --success-color: #198754; /* Updated Success */
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --info-color: #0dcaf0;
+            --gray-light: #f8f9fa;
+            --gray-mid: #dee2e6; /* Slightly darker mid */
+            --gray-dark: #6c757d;
+            --text-main: #212529;
+            --text-light: #6c757d;
+            --radius: 0.375rem;
+            --shadow: 0 0.125rem 0.35rem rgba(0, 0, 0, 0.06); /* Softer shadow */
+            --shadow-lg: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+            --ai-accent: #6f42c1; /* Purple for AI */
+            --ai-bg: linear-gradient(to right, #f3f0f9, #f8f6fc);
+        }
+
+        body {
+            background-color: var(--gray-light);
+            color: var(--text-main);
+            line-height: 1.6;
+            font-size: 0.95rem; /* Slightly smaller base font */
+        }
+
+        .page-wrapper {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        main {
+            flex: 1;
+        }
+
+        /* Cards and Sections */
+        .card {
+            background-color: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 1.75rem; /* Increased spacing */
+            border: 1px solid var(--gray-mid);
+            overflow: hidden;
+        }
+
+        .card-flush {
+            padding: 1.75rem;
+        }
+
+        .card-nested {
+            border: 1px solid var(--gray-mid);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-bottom: 1.25rem; /* Space between nested items */
+            position: relative;
+            background-color: #fff;
+            box-shadow: none; /* No shadow for nested */
+            transition: border-color 0.2s ease;
+        }
+        .card-nested:hover {
+            border-color: var(--primary-light);
+        }
+
+        .application-header-info {
+            background-color: #fff;
+            padding: 1.75rem;
+            border-radius: var(--radius);
+            margin-bottom: 1.75rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--gray-mid);
+        }
+
+        .job-title {
+            font-size: 1.6rem; /* Slightly larger */
+            font-weight: 600;
+            color: var(--text-main); /* Use main text color */
+            margin-bottom: 0.5rem;
+        }
+        .job-title span {
+            color: var(--primary-color); /* Highlight company */
+        }
+
+        .company-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+        .company-info img {
+            opacity: 0.9;
+        }
+
+        /* Progress Bar and Section Navigation */
+        .progress-section {
+            background-color: white;
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 1.75rem;
+            border: 1px solid var(--gray-mid);
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .progress-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 0;
+        }
+
+        .progress-percentage {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .progress {
+            height: 8px; /* Thinner bar */
+            border-radius: 4px;
+            background-color: var(--gray-mid);
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            background-color: var(--primary-color);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .section-navigation {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem; /* Slightly smaller gap */
+            margin-top: 1.25rem;
+        }
+
+        .section-nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            background-color: var(--gray-light);
+            padding: 0.4rem 0.8rem; /* Adjusted padding */
+            border-radius: 1.25rem;
+            font-size: 0.85rem;
+            border: 1px solid var(--gray-mid);
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--text-light);
+            font-weight: 500;
+        }
+        .section-nav-item .nav-icon {
+            font-size: 1rem; /* Slightly smaller icon */
+        }
+
+        .section-nav-item.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .section-nav-item:hover:not(.active) {
+            background-color: var(--gray-mid);
+            border-color: var(--gray-dark);
+            color: var(--text-main);
+        }
+
+        .section-nav-item.active:hover {
+            background-color: var(--primary-dark);
+            border-color: var(--primary-dark);
+        }
+
+        /* Section Headers and Content */
+        .application-section {
+            margin-bottom: 1.75rem;
+            background-color: #fff;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--gray-mid);
+            overflow: hidden; /* Keep hidden for collapse */
+        }
+
+        .section-header {
+            padding: 1.25rem 1.75rem; /* More padding */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            border-radius: var(--radius) var(--radius) 0 0;
+            transition: background-color 0.3s ease;
+            border-bottom: 1px solid var(--gray-mid); /* Separator */
+        }
+        .section-header:hover {
+            background-color: var(--primary-light);
+        }
+        /* Style header differently when content is closed */
+         .section-content:not(.open) + .section-header { /* Incorrect sibling selector, needs parent */
+            /* This won't work as intended easily with CSS only */
+         }
+         .application-section:has(.section-content:not(.open)) .section-header {
+             border-bottom-color: transparent; /* Remove border when collapsed */
+         }
+
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.15rem; /* Adjusted size */
+            font-weight: 600;
+        }
+
+        .section-title h3 {
+            margin-bottom: 0;
+            font-size: 1.15rem; /* Match parent */
+            font-weight: 600;
+        }
+
+        .section-title .icon {
+            font-size: 1.35rem;
+            color: var(--primary-color); /* Color the icon */
+        }
+
+        .required-indicator {
+            color: var(--danger-color);
+            font-weight: normal; /* Less prominent */
+            font-size: 0.8em; /* Smaller */
+            margin-left: 0.25rem;
+            vertical-align: super;
+        }
+
+        .section-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        .status-indicator {
+            width: 1rem;
+            height: 1rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+            border: 1px solid transparent;
+        }
+
+        .status-indicator.complete {
+            background-color: var(--primary-light);
+            color: var(--primary-dark);
+            border-color: var(--primary-color);
+        }
+        .status-indicator.complete::before { content: "✓"; }
+
+        .status-indicator.incomplete {
+            background-color: var(--gray-light);
+            color: var(--gray-dark);
+            border-color: var(--gray-mid);
+        }
+        .status-indicator.incomplete::before { content: "•"; }
+
+        .status-text {
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .section-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out, padding 0.4s ease-out, border-top-width 0.1s linear 0.3s; /* Smoother transition */
+            padding: 0 1.75rem; /* Match header horizontal padding */
+            border-top: 0px solid var(--gray-mid); /* Start with 0 width */
+        }
+
+        .section-content.open {
+            max-height: 5000px; /* Large value */
+            padding: 1.75rem;
+            border-top-width: 1px; /* Animate border in */
+            transition: max-height 0.4s ease-in, padding 0.4s ease-in, border-top-width 0.1s linear;
+        }
+
+        .toggle-section {
+            border: none;
+            background: none;
+            width: 1.75rem; /* Larger click target */
+            height: 1.75rem;
+            font-size: 1.3rem;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-dark);
+            cursor: pointer;
+            transition: color 0.3s ease, transform 0.3s ease; /* Add transform */
+            border-radius: 50%;
+        }
+        .toggle-section:hover {
+            color: var(--primary-dark);
+            background-color: var(--gray-light);
+        }
+        /* Rotate toggle */
+        .section-content:not(.open) + .toggle-section { /* Requires JS to toggle class on button */
+           /* transform: rotate(0deg); */
+        }
+        .toggle-section.expanded {
+            transform: rotate(180deg);
+        }
+
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem; /* Consistent gap */
+            margin-bottom: 1.5rem;
+        }
+
+        .form-column {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .form-label {
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+            margin-bottom: 0.6rem; /* More space below label */
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .required-marker {
+            color: var(--danger-color);
+            font-weight: normal; /* Match indicator */
+            font-size: 0.9em;
+            margin-left: 0.1rem;
+        }
+
+        .form-control, .form-select {
+            display: block;
+            width: 100%;
+            padding: 0.5rem 0.85rem; /* Adjusted padding */
+            font-size: 0.95rem;
+            font-weight: 400;
+            line-height: 1.5;
+            color: var(--text-main);
+            background-color: #fff;
+            background-clip: padding-box;
+            border: 1px solid var(--gray-mid);
+            border-radius: var(--radius);
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.2);
+        }
+
+        /* Input group styling */
+        .input-group .form-control:focus {
+            z-index: 3; /* Ensure focused input is on top */
+        }
+
+        textarea.form-control {
+            min-height: calc(1.5em + 1rem + 2px) * 3; /* Default height for 3 rows */
+        }
+
+        .form-control.prefilled {
+            /* Subtle indication - maybe just background? */
+            background-color: #f8f9fa; /* Slightly off-white */
+            border-left: 3px solid var(--primary-light);
+        }
+
+        .form-helper {
+            display: block;
+            margin-top: 0.35rem;
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        .validation-error {
+            color: var(--danger-color);
+            font-size: 0.85rem;
+            margin-top: 0.4rem;
+            font-weight: 500;
+            display: block; /* Ensure it takes space */
+            min-height: 1em; /* Prevent layout shifts */
+        }
+
+        .prefilled-badge {
+            display: inline-flex; /* Keep flex for alignment */
+            align-items: center;
+            margin-left: 0.3rem; /* Closer to the label */
+            color: var(--primary-color); /* Keep primary color for icon, but could be gray */
+            opacity: 0.7; /* Make icon slightly transparent */
+            /* Remove padding, background, border etc. */
+        }
+        .prefilled-badge .badge-text {
+            display: none; /* Hide the text part */
+        }
+        .prefilled-badge i {
+            font-size: 0.8rem; /* Adjust icon size as needed */
+        }
+
+        .autosave-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-top: 0.625rem;
+        }
+        .autosave-indicator .status-text { font-size: 0.85rem; }
+
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--success-color); /* Use success color */
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(25, 135, 84, 0.7); } /* Match success color */
+            70% { box-shadow: 0 0 0 6px rgba(25, 135, 84, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(25, 135, 84, 0); }
+        }
+
+        /* Contextual Hints */
+        .contextual-hint {
+            padding: 0.85rem 1.1rem;
+            border-radius: var(--radius);
+            margin-top: 1rem;
+            font-size: 0.9rem; /* Slightly larger */
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            border-width: 1px;
+            border-style: solid;
+            border-left-width: 4px;
+        }
+        .contextual-hint i {
+            margin-top: 0.15rem; /* Align icon better */
+            font-size: 1.1em;
+        }
+
+        .contextual-hint.info {
+            background-color: #cfe2ff; color: #052c65; border-color: #b6d4fe; border-left-color: #0d6efd;
+        }
+        .contextual-hint.tip {
+            background-color: #d1e7dd; color: #0a3622; border-color: #c3e6cb; border-left-color: #198754;
+        }
+        .contextual-hint.suggestion {
+            background-color: #fff3cd; color: #664d03; border-color: #ffe69c; border-left-color: #ffc107;
+        }
+
+        /* Document Selection */
+        .document-selection-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Wider items */
+            gap: 1rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .doc-select-item {
+            display: flex;
+            align-items: center;
+            padding: 0.85rem 1rem;
+            border: 1px solid var(--gray-mid);
+            border-radius: var(--radius);
+            background-color: white;
+            transition: var(--transition);
+            cursor: pointer; /* Make whole item clickable */
+        }
+        .doc-select-item:has(input:checked) {
+            border-color: var(--primary-color);
+            background-color: var(--primary-light);
+        }
+         .doc-select-item:not(:has(input:checked)):hover {
+             border-color: var(--primary-dark);
+             background-color: #f8f9fa;
+         }
+
+
+        .doc-select-item input[type="checkbox"] {
+            margin-right: 0.85rem;
+            flex-shrink: 0; /* Prevent shrinking */
+            cursor: pointer;
+        }
+
+        .doc-select-item label {
+            display: flex;
+            align-items: center; /* Align icon and text */
+            gap: 0.6rem;
+            cursor: pointer;
+            margin-bottom: 0;
+            flex-grow: 1;
+        }
+        .doc-select-item .doc-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .doc-select-item .doc-info span {
+            font-weight: 500;
+            word-break: break-word; /* Break long filenames */
+        }
+        .doc-select-item .doc-info small {
+            color: var(--text-light);
+            font-size: 0.8rem;
+        }
+        .doc-select-item i { font-size: 1.5rem; } /* Larger file icons */
+
+        /* Buttons */
+        .btn {
+            padding: 0.5rem 1rem; /* Standardized padding */
+            border-radius: var(--radius);
+            font-weight: 500;
+            line-height: 1.5;
+            text-align: center;
+            text-decoration: none;
+            vertical-align: middle;
+            cursor: pointer;
+            user-select: none;
+            border: 1px solid transparent;
+            transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+        .btn:focus { box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25); }
+        .btn-success { background-color: var(--success-color); border-color: var(--success-color); }
+        .btn-success:hover { background-color: #157347; border-color: #146c43; } /* Darker success hover */
+
+        .btn-sm {
+            padding: 0.35rem 0.7rem;
+            font-size: 0.875rem;
+        }
+        .btn-lg {
+            padding: 0.65rem 1.25rem;
+            font-size: 1.1rem;
+        }
+
+        /* Remove Item Button (Experience/Education) - Updated */
+        .remove-item-btn {
+            position: absolute;
+            top: 0.6rem; /* Adjusted position */
+            right: 0.6rem;
+            padding: 0.2rem 0.4rem; /* Smaller padding */
+            font-size: 1rem; /* Icon size */
+            line-height: 1;
+            background-color: transparent;
+            border: none;
+            color: var(--gray-dark);
+            transition: color 0.2s ease, transform 0.2s ease;
+            z-index: 5;
+            border-radius: 50%; /* Make it round */
+            width: 1.8rem;
+            height: 1.8rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .remove-item-btn:hover {
+            color: var(--danger-color);
+            background-color: #f8d7da; /* Light red background on hover */
+            transform: scale(1.1);
+        }
+        .remove-item-btn i {
+            vertical-align: middle;
+            display: block; /* Helps centering */
+        }
+
+        /* Submit Section */
+        .submit-section {
+            text-align: center;
+            margin: 2.5rem 0 1.5rem;
+        }
+
+        .submit-note {
+            margin-top: 1rem;
+            color: var(--text-light);
+            font-size: 0.875rem;
+        }
+
+        /* AI Assistant */
+        .ai-assistant {
+            background: var(--ai-bg);
+            border-radius: var(--radius);
+            padding: 1rem 1.25rem; /* More padding */
+            margin: 1rem 0;
+            border: 1px solid rgba(111, 66, 193, 0.2);
+            border-left: 4px solid var(--ai-accent);
+            font-size: 0.9rem;
+        }
+
+        .ai-assistant-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem; /* More space below header */
+            color: var(--ai-accent);
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        .ai-assistant-header i { font-size: 1.2em; }
+
+        .ai-suggestion {
+            background-color: white;
+            border-radius: var(--radius);
+            padding: 0.75rem 1rem;
+            margin-top: 0.75rem;
+            color: var(--text-main);
+            border: 1px solid var(--gray-mid);
+            font-size: 0.85rem;
+        }
+
+        /* Validation Summary */
+        .validation-summary-box {
+            background-color: #f8d7da;
+            color: #58151c; /* Darker text */
+            padding: 1rem 1.25rem;
+            border-radius: var(--radius);
+            margin-bottom: 1.5rem; /* Space below */
+            border: 1px solid #f1aeb5;
+            border-left: 5px solid var(--danger-color);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        .validation-summary-box ul {
+            margin-bottom: 0;
+            padding-left: 1.5rem;
+        }
+
+        /* Radio buttons */
+        .radio-group {
+            display: flex;
+            flex-wrap: wrap; /* Allow wrapping */
+            gap: 1rem 1.5rem; /* Row and column gap */
+            margin-top: 0.5rem;
+        }
+
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem; /* Increased gap */
+            cursor: pointer;
+            margin-bottom: 0;
+            font-weight: 400; /* Normal weight */
+        }
+        .radio-group input[type="radio"] {
+            margin-top: -0.1em; /* Align better with text */
+            cursor: pointer;
+        }
+
+        /* Fake tags input */
+        .tags-input-wrapper {
+            margin-bottom: 0.75rem; /* Space below tags */
+        }
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            padding: 0.5rem 0.75rem; /* Adjust padding */
+            border: 1px solid var(--gray-mid);
+            border-radius: var(--radius);
+            background-color: white;
+            min-height: calc(1.5em + 1rem + 2px); /* Match input height */
+            cursor: text; /* Indicate it's editable */
+        }
+        .tags-container:focus-within { /* Style when container or input has focus */
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.2);
+        }
+
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.25rem 0.625rem;
+            background-color: var(--primary-light);
+            color: var(--primary-dark);
+            border-radius: 0.25rem; /* Less rounded */
+            font-size: 0.85rem;
+            font-weight: 500;
+            border: 1px solid var(--primary-color);
+        }
+
+        .tag .tag-remove {
+            cursor: pointer;
+            font-weight: bold;
+            color: var(--primary-dark);
+            opacity: 0.7;
+            transition: opacity 0.2s ease;
+        }
+        .tag .tag-remove:hover {
+            opacity: 1;
+        }
+        /* Hidden input for tags */
+        .tags-input {
+            border: none;
+            outline: none;
+            padding: 0.25rem 0;
+            flex-grow: 1;
+            min-width: 100px;
+            background: transparent;
+            font-size: 0.95rem;
+        }
+        .tags-input::placeholder {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* Custom spinner animation */
+        @keyframes spinner {
+            to { transform: rotate(360deg); }
+        }
+        .spinner {
+            display: inline-block;
+            width: 1em; /* Relative size */
+            height: 1em;
+            vertical-align: -0.125em; /* Align better */
+            border: 2px solid currentColor;
+            border-right-color: transparent;
+            border-radius: 50%;
+            animation: spinner 0.75s linear infinite;
+            margin-right: 0.5rem;
+        }
+
+        /* Dynamic List Items */
+        .dynamic-list-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem; /* Consistent gap */
+        }
+        .add-item-btn {
+            margin-top: 1rem; /* Space above add button */
+            align-self: flex-start; /* Align left */
+        }
+
+        /* Footer */
+        footer {
+            font-size: 0.85rem;
+        }
+
+
+        /* Mobile optimizations */
+        @media (max-width: 767.98px) {
+            body { font-size: 0.9rem; } /* Adjust base font */
+            .container { padding-left: 0.75rem; padding-right: 0.75rem; }
+            .form-row { flex-direction: column; gap: 1.25rem; margin-bottom: 1.25rem; }
+            .section-header { padding: 1rem 1.25rem; }
+            .section-content { padding: 1.25rem; }
+            .section-content.open { padding: 1.25rem; }
+            .section-nav-item .nav-text { display: none; } /* Hide text on small screens */
+            .section-nav-item { padding: 0.5rem; border-radius: 50%; width: 2.5rem; height: 2.5rem; justify-content: center;} /* Make icons circular */
+            .section-nav-item .nav-icon { font-size: 1.2rem; }
+            .section-navigation { justify-content: space-around; } /* Distribute icons */
+            .doc-select-item { padding: 0.75rem; }
+            .section-status .status-text { display: none; } /* Hide status text */
+            .job-title { font-size: 1.4rem; }
+            .btn-lg { padding: 0.5rem 1rem; font-size: 1rem; } /* Slightly smaller large buttons */
+            .submit-section .d-md-flex { flex-direction: column; gap: 0.75rem;} /* Stack submit buttons */
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <!-- Title will be set by JS -->
-        <h1 id="application-header-title">Loading Application...</h1>
-         <nav>
-            <a href="dashboard.html">Dashboard</a>
-            <a href="profile.html">My Profile</a>
-            <!-- Active link logic might be tricky here, maybe omit for simplicity -->
+    <div class="page-wrapper">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm sticky-top">
+            <div class="container-fluid">
+                <a class="navbar-brand fw-bold" href="dashboard.html">
+                    <i class="bi bi-briefcase-fill me-2"></i>Applicant Portal
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="profile.html">Profile</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Job Search</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Applications</a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav ms-auto align-items-center">
+                         <li class="nav-item me-2">
+                            <a class="nav-link btn btn-sm btn-outline-light" href="apply.html?new=true" title="Start a new application">
+                                <i class="bi bi-plus-circle me-1"></i>New Application
+                            </a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="navbarDropdownUser" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-person-circle me-1 fs-5"></i>David Joyner
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownUser">
+                                <li><a class="dropdown-item" href="profile.html"><i class="bi bi-person-lines-fill me-2"></i>My Profile</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="bi bi-gear-fill me-2"></i>Settings</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </nav>
-    </header>
 
-    <main class="container application-container">
-        <h2 id="application-title">Applying for: [Job Title Here]</h2> <!-- JS will update this -->
-
-        <!-- Progress Bar -->
-        <div class="progress-container">
-             <label for="application-progress">Application Progress</label>
-             <progress id="application-progress" value="0" max="100"></progress>
-             <p id="auto-save-status" class="status-message" style="text-align: right; margin-top: 0.2rem;"></p>
-        </div>
-
-        <!-- Validation Summary -->
-        <div id="validation-summary" role="alert"></div>
-
-        <form id="application-form" novalidate> <!-- novalidate prevents default browser validation popups -->
-
-            <!-- Card: Personal Information (Required) -->
-            <div class="card required" data-section="personal-info">
-                <div class="card-header" tabindex="0" role="button" aria-expanded="true" aria-controls="content-personal-info">
-                    <div class="card-header-title">
-                        <h3>Personal Information</h3>
-                        <span class="required-indicator">(Required)</span>
-                    </div>
-                    <button type="button" class="toggle-card" aria-label="Toggle Personal Information Section">-</button>
+        <main class="container my-4">
+            <div class="application-header-info">
+                <h2 id="application-title" class="job-title">Senior UX Designer at <span>Salesforce</span></h2>
+                <div class="company-info">
+                    <span id="application-company">San Francisco, CA • Full-time</span>
                 </div>
-                <div id="content-personal-info" class="card-content">
-                    <p class="text-muted" style="margin-bottom: 1rem;"><small>This information is pre-filled from your profile. Please review and update if necessary for this specific application.</small></p>
-                    <div class="form-group">
-                        <label for="app-name" class="required">Full Name</label>
-                        <input type="text" id="app-name" name="name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="app-email" class="required">Email</label>
-                        <input type="email" id="app-email" name="email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="app-phone">Phone</label>
-                        <input type="tel" id="app-phone" name="phone">
-                    </div>
-                    <div class="form-group">
-                        <label for="app-location">Location (City, State)</label>
-                        <input type="text" id="app-location" name="location">
-                    </div>
+                <div id="autosave-indicator" class="autosave-indicator">
+                    <div class="pulse-dot"></div>
+                    <span id="auto-save-status" class="status-text">Autosaved at <span id="last-saved-time">10:42 AM</span></span>
                 </div>
             </div>
 
-             <!-- Card: Work Experience (Required - Example) -->
-            <div class="card required" data-section="work-experience">
-                <div class="card-header" tabindex="0" role="button" aria-expanded="true" aria-controls="content-work-experience">
-                     <div class="card-header-title">
-                        <h3>Work Experience</h3>
-                         <span class="required-indicator">(Required)</span>
-                    </div>
-                    <button type="button" class="toggle-card" aria-label="Toggle Work Experience Section">-</button>
+            <div class="progress-section">
+                <div class="progress-header">
+                    <h3 class="progress-title">Application Progress</h3>
+                    <span id="progress-percentage" class="progress-percentage">42% Complete</span>
                 </div>
-                <div id="content-work-experience" class="card-content">
-                     <p class="text-muted" style="margin-bottom: 1rem;"><small>Review your work history. Add, remove, or edit entries as needed for this role. At least one entry is required.</small></p>
-                    <div id="app-work-experience-list" class="dynamic-list-container">
-                        <!-- App-specific Work experience items will be loaded/added here -->
-                        <p class="text-muted">Loading experience...</p>
+                <div class="progress-bar-container">
+                    <div class="progress">
+                        <div id="application-progress" class="progress-bar" role="progressbar" style="width: 42%" aria-valuenow="42" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
-                    <button type="button" class="btn btn-secondary btn-small add-app-experience-btn">Add Experience</button>
                 </div>
+                <nav class="section-navigation" id="section-navigation">
+                    <button type="button" class="section-nav-item active" data-section="personal-info" title="Personal Info">
+                        <span class="nav-icon"><i class="bi bi-person-fill"></i></span> <span class="nav-text">Personal Info</span>
+                    </button>
+                    <button type="button" class="section-nav-item" data-section="work-experience" title="Experience">
+                        <span class="nav-icon"><i class="bi bi-briefcase-fill"></i></span> <span class="nav-text">Experience</span>
+                    </button>
+                    <button type="button" class="section-nav-item" data-section="education" title="Education">
+                        <span class="nav-icon"><i class="bi bi-mortarboard-fill"></i></span> <span class="nav-text">Education</span>
+                    </button>
+                    <button type="button" class="section-nav-item" data-section="skills" title="Skills">
+                        <span class="nav-icon"><i class="bi bi-stars"></i></span> <span class="nav-text">Skills</span>
+                    </button>
+                    <button type="button" class="section-nav-item" data-section="documents" title="Documents">
+                        <span class="nav-icon"><i class="bi bi-file-earmark-text"></i></span> <span class="nav-text">Documents</span>
+                    </button>
+                    <button type="button" class="section-nav-item" data-section="cover-letter" title="Cover Letter">
+                        <span class="nav-icon"><i class="bi bi-envelope"></i></span> <span class="nav-text">Cover Letter</span>
+                    </button>
+                    <button type="button" class="section-nav-item" data-section="questions" title="Questions">
+                        <span class="nav-icon"><i class="bi bi-question-circle-fill"></i></span> <span class="nav-text">Questions</span>
+                    </button>
+                </nav>
             </div>
 
-            <!-- Card: Education (Optional - Example) -->
-            <div class="card optional" data-section="education">
-                <div class="card-header" tabindex="0" role="button" aria-expanded="true" aria-controls="content-education">
-                     <div class="card-header-title">
-                        <h3>Education</h3>
-                        <!-- No required indicator -->
-                    </div>
-                    <button type="button" class="toggle-card" aria-label="Toggle Education Section">-</button>
-                </div>
-                <div id="content-education" class="card-content">
-                     <p class="text-muted" style="margin-bottom: 1rem;"><small>Include relevant education. Add or remove entries as needed.</small></p>
-                    <div id="app-education-list" class="dynamic-list-container">
-                        <!-- App-specific Education items will be loaded/added here -->
-                         <p class="text-muted">Loading education...</p>
-                    </div>
-                    <button type="button" class="btn btn-secondary btn-small add-app-education-btn">Add Education</button>
-                </div>
+            <div id="validation-summary" role="alert" class="validation-summary-box" style="display: none;">
+                <h5 class="mb-2"><i class="bi bi-exclamation-triangle-fill me-2"></i>Please address the following issues:</h5>
+                <ul id="validation-list"></ul>
             </div>
 
-             <!-- Card: Skills (Optional) -->
-            <div class="card optional" data-section="skills">
-                <div class="card-header" tabindex="0" role="button" aria-expanded="true" aria-controls="content-skills">
-                     <div class="card-header-title">
-                        <h3>Skills</h3>
+            <form id="application-form" novalidate class="application-sections">
+                <div class="application-section card required" id="personal-info-section" data-section="personal-info">
+                    <div class="section-header" role="button" aria-expanded="true" aria-controls="content-personal-info">
+                        <div class="section-title">
+                            <i class="bi bi-person-fill icon"></i>
+                            <h3>Personal Information</h3>
+                            <span class="required-indicator">*</span>
+                        </div>
+                        <div class="section-status">
+                            <div class="status-indicator complete" data-status="complete"></div>
+                            <span class="status-text">Complete</span>
+                            <button type="button" class="toggle-section expanded" aria-label="Collapse Personal Information Section"><i class="bi bi-chevron-up"></i></button>
+                        </div>
                     </div>
-                    <button type="button" class="toggle-card" aria-label="Toggle Skills Section">-</button>
-                </div>
-                <div id="content-skills" class="card-content">
-                    <div class="form-group">
-                        <label for="app-skills">Relevant Skills</label>
-                        <textarea id="app-skills" name="skills" rows="4" placeholder="Highlight skills most relevant to this job description, separated by commas"></textarea>
-                         <small class="text-muted">Pre-filled from profile. Tailor this list for the specific job.</small>
-                         <div class="contextual-hint">
-                            <strong>Hint:</strong> Check the job description for keywords and ensure they are reflected here if applicable.
-                         </div>
-                    </div>
-                </div>
-            </div>
-
-             <!-- Card: Documents (Required - Example: Assume Resume is needed) -->
-            <div class="card required" data-section="documents">
-                <div class="card-header" tabindex="0" role="button" aria-expanded="true" aria-controls="content-documents">
-                     <div class="card-header-title">
-                        <h3>Attach Documents</h3>
-                         <span class="required-indicator">(Required)</span>
-                    </div>
-                    <button type="button" class="toggle-card" aria-label="Toggle Documents Section">-</button>
-                </div>
-                <div id="content-documents" class="card-content">
-                     <p class="text-muted" style="margin-bottom: 1rem;"><small>Select documents from your locker to attach to this application. At least one document (e.g., Resume) is typically required.</small></p>
-                     <div id="app-document-list">
-                         <!-- Document selection checkboxes will be loaded here -->
-                         <p class="text-muted">Loading documents from locker...</p>
-                     </div>
-                     <p style="margin-top: 1rem;"><small>Need to add or manage documents? Go to <a href="profile.html#document-locker" target="_blank">My Profile > Document Locker</a>.</small></p>
-                     <div class="contextual-hint">
-                         <strong>Tip:</strong> Always attach a resume. Consider a tailored cover letter if the option is available or required.
-                     </div>
-                </div>
-            </div>
-
-            <!-- Card: Cover Letter (Optional) -->
-            <div class="card optional" data-section="cover-letter">
-                <div class="card-header" tabindex="0" role="button" aria-expanded="true" aria-controls="content-cover-letter">
-                     <div class="card-header-title">
-                        <h3>Cover Letter</h3>
-                    </div>
-                    <button type="button" class="toggle-card" aria-label="Toggle Cover Letter Section">-</button>
-                </div>
-                <div id="content-cover-letter" class="card-content">
-                    <div class="form-group">
-                        <label for="app-cover-letter">Paste Cover Letter (Optional)</label>
-                        <textarea id="app-cover-letter" name="coverLetter" rows="8" placeholder="You can paste your cover letter text here, or attach it as a document if preferred."></textarea>
-                         <div class="contextual-hint">
-                             <strong>Suggestion:</strong> Briefly explain why you're a great fit for this specific role and company. Address it to the hiring manager if possible.
-                         </div>
+                    <div id="content-personal-info" class="section-content open">
+                        <p class="form-helper mb-3">This information is pre-filled from your profile. Review and update if necessary for this specific application.</p>
+                        <div class="form-row">
+                            <div class="form-group form-column">
+                                <label for="app-name" class="form-label">
+                                    Full Name <span class="required-marker">*</span>
+                                    <span class="prefilled-badge"><i class="fas fa-check-circle"></i></span>
+                                </label>
+                                <input type="text" id="app-name" name="name" class="form-control prefilled" value="David Joyner" required>
+                                <div class="validation-error" data-validation-for="name"></div>
+                            </div>
+                            <div class="form-group form-column">
+                                <label for="app-email" class="form-label">
+                                    Email <span class="required-marker">*</span>
+                                    <span class="prefilled-badge"><i class="fas fa-check-circle"></i></span>
+                                </label>
+                                <input type="email" id="app-email" name="email" class="form-control prefilled" value="david.joyner@gatech.edu" required>
+                                <div class="validation-error" data-validation-for="email"></div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group form-column">
+                                <label for="app-phone" class="form-label">
+                                    Phone
+                                    <span class="prefilled-badge"><i class="fas fa-check-circle"></i></span>
+                                </label>
+                                <input type="tel" id="app-phone" name="phone" class="form-control prefilled" value="(404) 555-1234">
+                                <div class="validation-error" data-validation-for="phone"></div>
+                            </div>
+                            <div class="form-group form-column">
+                                <label for="app-location" class="form-label">
+                                    Location (City, State)
+                                    <span class="prefilled-badge"><i class="fas fa-check-circle"></i></span>
+                                </label>
+                                <input type="text" id="app-location" name="location" class="form-control prefilled" value="Atlanta, GA">
+                                <div class="validation-error" data-validation-for="location"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Card: Additional Questions (Could be Required/Optional based on job) -->
-             <div class="card optional" data-section="questions">
-                <div class="card-header" tabindex="0" role="button" aria-expanded="true" aria-controls="content-questions">
-                     <div class="card-header-title">
-                        <h3>Additional Questions</h3>
-                        <!-- <span class="required-indicator">(Required)</span> Example if required -->
+                <div class="application-section card required" id="work-experience-section" data-section="work-experience">
+                    <div class="section-header" role="button" aria-expanded="false" aria-controls="content-work-experience">
+                        <div class="section-title">
+                            <i class="bi bi-briefcase-fill icon"></i>
+                            <h3>Work Experience</h3>
+                            <span class="required-indicator">*</span>
+                        </div>
+                        <div class="section-status">
+                            <div class="status-indicator complete" data-status="complete"></div>
+                            <span class="status-text">Complete</span>
+                            <button type="button" class="toggle-section" aria-label="Expand Work Experience Section"><i class="bi bi-chevron-down"></i></button>
+                        </div>
                     </div>
-                    <button type="button" class="toggle-card" aria-label="Toggle Additional Questions Section">-</button>
-                </div>
-                <div id="content-questions" class="card-content">
-                     <p class="text-muted" style="margin-bottom: 1rem;"><small>Please answer any additional questions below.</small></p>
-                     <div class="form-group">
-                        <label for="app-q-salary">Desired Salary (Optional)</label>
-                        <input type="text" id="app-q-salary" name="desiredSalary" placeholder="e.g., 80,000 USD or Negotiable">
-                     </div>
-                     <div class="form-group">
-                         <label for="app-q-startdate">Earliest Start Date (Optional)</label>
-                         <input type="date" id="app-q-startdate" name="startDate">
-                     </div>
-                      <div class="form-group">
-                        <label for="app-q-referral">How did you hear about this position? (Optional)</label>
-                        <input type="text" id="app-q-referral" name="referralSource">
+                    <div id="content-work-experience" class="section-content">
+                        <p class="form-helper mb-3">Review your work history. Add, remove, or edit entries as needed for this role. At least one entry is required.</p>
+                        <div id="app-work-experience-list" class="dynamic-list-container">
+                            <div class="dynamic-list-item experience-item card-nested">
+                                <button type="button" class="remove-item-btn" title="Remove Experience"><i class="bi bi-x-lg"></i></button>
+                                <div class="form-row">
+                                    <div class="form-group form-column">
+                                        <label class="form-label">Job Title <span class="required-marker">*</span> <span class="prefilled-badge"><i class="fas fa-check-circle"></i></span></label>
+                                        <input type="text" name="jobTitle" class="form-control prefilled" value="Associate Dean for Off-Campus & Special Initiatives" required>
+                                        <div class="validation-error"></div>
+                                    </div>
+                                    <div class="form-group form-column">
+                                        <label class="form-label">Company <span class="required-marker">*</span> <span class="prefilled-badge"><i class="fas fa-check-circle"></i></span></label>
+                                        <input type="text" name="company" class="form-control prefilled" value="College of Computing at Georgia Tech" required>
+                                        <div class="validation-error"></div>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group form-column">
+                                        <label class="form-label">Duration <span class="prefilled-badge"><i class="fas fa-check-circle"></i></span></label>
+                                        <input type="text" name="duration" class="form-control prefilled" value="Jan 2025 - Present · 4 mos">
+                                    </div>
+                                    <div class="form-group form-column">
+                                        <label class="form-label">Location (Optional) <span class="prefilled-badge"><i class="fas fa-check-circle"></i></span></label>
+                                        <input type="text" name="location" class="form-control prefilled" value="Atlanta, Georgia, United States">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Description / Responsibilities <span class="prefilled-badge"><i class="fas fa-check-circle"></i></span></label>
+                                    <textarea name="description" class="form-control prefilled" rows="3">Overseeing online, off-campus, and other special initiatives for the College of Computing.</textarea>
+                                </div>
+                            </div>
+
+                             <div class="dynamic-list-item experience-item card-nested">
+                                <button type="button" class="remove-item-btn" title="Remove Experience"><i class="bi bi-x-lg"></i></button>
+                                <div class="form-row">
+                                    <div class="form-group form-column">
+                                        <label class="form-label">Job Title <span class="required-marker">*</span> <span class="prefilled-badge"><i class="fas fa-check-circle"></i></span></label>
+                                        <input type="text" name="jobTitle" class="form-control prefilled" value="Zvi Galil PEACE Chair" required>
+                                        <div class="validation-error"></div>
+                                    </div>
+                                    <div class="form-group form-column">
+                                        <label class="form-label">Company <span class="required-marker">*</span> <span class="prefilled-badge"><i class="fas fa-check-circle"></i></span></label>
+                                        <input type="text" name="company" class="form-control prefilled" value="College of Computing at Georgia Tech" required>
+                                        <div class="validation-error"></div>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group form-column">
+                                        <label class="form-label">Duration <span class="prefilled-badge"><i class="fas fa-check-circle"></i></span></label>
+                                        <input type="text" name="duration" class="form-control prefilled" value="Sep 2023 - Present · 1 yr 8 mos">
+                                    </div>
+                                     <div class="form-group form-column">
+                                        <label class="form-label">Location (Optional) <span class="prefilled-badge"><i class="fas fa-check-circle"></i></span></label>
+                                        <input type="text" name="location" class="form-control prefilled" value="Atlanta, Georgia, United States">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Description / Responsibilities <span class="prefilled-badge"><i class="fas fa-check-circle"></i></span></label>
+                                    <textarea name="description" class="form-control prefilled" rows="3">Inaugural holder of the newly endowed Zvi Galil PEACE (Pervasive Equitable Access for Computing Education) Chair.</textarea>
+                                </div>
+                            </div>
+
+                             <div class="dynamic-list-item experience-item card-nested">
+                                <button type="button" class="remove-item-btn" title="Remove Experience"><i class="bi bi-x-lg"></i></button>
+                                <div class="form-row">
+                                    <div class="form-group form-column">
+                                        <label class="form-label">Job Title <span class="required-marker">*</span> <span class="prefilled-badge"><i class="fas fa-check-circle"></i></span></label>
+                                        <input type="text" name="jobTitle" class="form-control prefilled" value="Principal Research Associate" required>
+                                        <div class="validation-error"></div>
+                                    </div>
+                                    <div class="form-group form-column">
+                                        <label class="form-label">Company <span class="required-marker">*</span> <span class="prefilled-badge"><i class="fas fa-check-circle"></i></span></label>
+                                        <input type="text" name="company" class="form-control prefilled" value="College of Computing at Georgia Tech" required>
+                                        <div class="validation-error"></div>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group form-column">
+                                        <label class="form-label">Duration <span class="prefilled-badge"><i class="fas fa-check-circle"></i></span></label>
+                                        <input type="text" name="duration" class="form-control prefilled" value="Jul 2023 - Present · 1 yr 10 mos">
+                                    </div>
+                                     <div class="form-group form-column">
+                                        <label class="form-label">Location (Optional) <span class="prefilled-badge"><i class="fas fa-check-circle"></i></span></label>
+                                        <input type="text" name="location" class="form-control prefilled" value="Atlanta, Georgia, United States">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Description / Responsibilities <span class="prefilled-badge"><i class="fas fa-check-circle"></i></span></label>
+                                    <textarea name="description" class="form-control prefilled" rows="3">Leading research initiatives in computing education and human-centered computing.</textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn btn-outline-primary btn-sm add-item-btn add-app-experience-btn mt-3">
+                            <i class="bi bi-plus-circle me-1"></i> Add Another Experience
+                        </button>
+
+                        <div class="contextual-hint tip mt-4">
+                            <i class="bi bi-lightbulb-fill"></i>
+                            <div>
+                                <strong>Tip:</strong> Focus on achievements that demonstrate your impact in UX. Use metrics and tailor descriptions to match the Senior UX Designer role requirements.
+                            </div>
+                        </div>
                     </div>
-                     <!-- Add more simulated questions as needed -->
+                </div>
+
+                <div class="application-section card optional" id="education-section" data-section="education">
+                    <div class="section-header" role="button" aria-expanded="false" aria-controls="content-education">
+                        <div class="section-title">
+                            <i class="bi bi-mortarboard-fill icon"></i>
+                            <h3>Education</h3>
+                        </div>
+                        <div class="section-status">
+                            <div class="status-indicator complete" data-status="complete"></div>
+                            <span class="status-text">Complete</span>
+                            <button type="button" class="toggle-section" aria-label="Expand Education Section"><i class="bi bi-chevron-down"></i></button>
+                        </div>
+                    </div>
+                    <div id="content-education" class="section-content">
+                        <p class="form-helper mb-3">Include relevant education. Add or remove entries as needed.</p>
+                        <div id="app-education-list" class="dynamic-list-container">
+                            <div class="dynamic-list-item education-item card-nested">
+                                <button type="button" class="remove-item-btn" title="Remove Education"><i class="bi bi-x-lg"></i></button>
+                                <div class="form-row">
+                                    <div class="form-group form-column">
+                                        <label class="form-label">Institution <span class="required-marker">*</span> <span class="prefilled-badge"><i class="fas fa-check-circle"></i></span></label>
+                                        <input type="text" name="institution" class="form-control prefilled" value="Georgia Institute of Technology" required>
+                                        <div class="validation-error"></div>
+                                    </div>
+                                    <div class="form-group form-column">
+                                        <label class="form-label">Degree / Field of Study <span class="prefilled-badge"><i class="fas fa-check-circle"></i></span></label>
+                                        <input type="text" name="degree" class="form-control prefilled" value="Doctor of Philosophy (Ph.D.), Human-Centered Computing">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group form-column">
+                                        <label class="form-label">Duration / Graduation Date <span class="prefilled-badge"><i class="fas fa-check-circle"></i></span></label>
+                                        <input type="text" name="eduDuration" class="form-control prefilled" value="2009 - 2015">
+                                    </div>
+                                    <div class="form-group form-column">
+                                        <label class="form-label">Location (Optional) <span class="prefilled-badge"><i class="fas fa-check-circle"></i></span></label>
+                                        <input type="text" name="eduLocation" class="form-control prefilled" value="Atlanta, GA">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Description <span class="prefilled-badge"><i class="fas fa-check-circle"></i></span></label>
+                                    <textarea name="eduDescription" class="form-control prefilled" rows="3">Completed my Ph.D. in Human-Centered Computing in December 2014 with my dissertation titled "Metacognitive Tutoring for Inquiry-Driven Modeling." Specialized in Learning Science & Technology.</textarea>
+                                </div>
+                            </div>
+
+                             <div class="dynamic-list-item education-item card-nested">
+                                <button type="button" class="remove-item-btn" title="Remove Education"><i class="bi bi-x-lg"></i></button>
+                                <div class="form-row">
+                                    <div class="form-group form-column">
+                                        <label class="form-label">Institution <span class="required-marker">*</span> <span class="prefilled-badge"><i class="fas fa-check-circle"></i></span></label>
+                                        <input type="text" name="institution" class="form-control prefilled" value="Georgia Institute of Technology" required>
+                                        <div class="validation-error"></div>
+                                    </div>
+                                    <div class="form-group form-column">
+                                        <label class="form-label">Degree / Field of Study <span class="prefilled-badge"><i class="fas fa-check-circle"></i></span></label>
+                                        <input type="text" name="degree" class="form-control prefilled" value="Master's Degree, Human-Computer Interaction">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group form-column">
+                                        <label class="form-label">Duration / Graduation Date <span class="prefilled-badge"><i class="fas fa-check-circle"></i></span></label>
+                                        <input type="text" name="eduDuration" class="form-control prefilled" value="2008 - 2009">
+                                    </div>
+                                    <div class="form-group form-column">
+                                        <label class="form-label">Location (Optional) <span class="prefilled-badge"><i class="fas fa-check-circle"></i></span></label>
+                                        <input type="text" name="eduLocation" class="form-control prefilled" value="Atlanta, GA">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Description <span class="prefilled-badge"><i class="fas fa-check-circle"></i></span></label>
+                                    <textarea name="eduDescription" class="form-control prefilled" rows="3">Completed my Master of Science in Human-Computer Interaction with my final project on "A Language-Neutral Assessment for Introductory CS Knowledge."</textarea>
+                                </div>
+                            </div>
+
+                            <div class="dynamic-list-item education-item card-nested">
+                                <button type="button" class="remove-item-btn" title="Remove Education"><i class="bi bi-x-lg"></i></button>
+                                <div class="form-row">
+                                    <div class="form-group form-column">
+                                        <label class="form-label">Institution <span class="required-marker">*</span> <span class="prefilled-badge"><i class="fas fa-check-circle"></i></span></label>
+                                        <input type="text" name="institution" class="form-control prefilled" value="Georgia Institute of Technology" required>
+                                        <div class="validation-error"></div>
+                                    </div>
+                                    <div class="form-group form-column">
+                                        <label class="form-label">Degree / Field of Study <span class="prefilled-badge"><i class="fas fa-check-circle"></i></span></label>
+                                        <input type="text" name="degree" class="form-control prefilled" value="Bachelor's Degree, Computer Science">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group form-column">
+                                        <label class="form-label">Duration / Graduation Date <span class="prefilled-badge"><i class="fas fa-check-circle"></i></span></label>
+                                        <input type="text" name="eduDuration" class="form-control prefilled" value="2005 - 2008">
+                                    </div>
+                                    <div class="form-group form-column">
+                                        <label class="form-label">Location (Optional) <span class="prefilled-badge"><i class="fas fa-check-circle"></i></span></label>
+                                        <input type="text" name="eduLocation" class="form-control prefilled" value="Atlanta, GA">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Description <span class="prefilled-badge"><i class="fas fa-check-circle"></i></span></label>
+                                    <textarea name="eduDescription" class="form-control prefilled" rows="3">Completed my Bachelor of Science in Computer Science with my final research capstone on "Investigating the Effects of Variously Moded Educational Materials on Learning." Specialized in People & Media.</textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn btn-outline-primary btn-sm add-item-btn add-app-education-btn mt-3">
+                            <i class="bi bi-plus-circle me-1"></i> Add Another Education
+                        </button>
+                    </div>
+                </div>
+
+                <div class="application-section card optional" id="skills-section" data-section="skills">
+                    <div class="section-header" role="button" aria-expanded="false" aria-controls="content-skills">
+                        <div class="section-title">
+                            <i class="bi bi-stars icon"></i>
+                            <h3>Skills & Portfolio</h3>
+                        </div>
+                        <div class="section-status">
+                            <div class="status-indicator complete" data-status="complete"></div>
+                            <span class="status-text">Complete</span>
+                            <button type="button" class="toggle-section" aria-label="Expand Skills Section"><i class="bi bi-chevron-down"></i></button>
+                        </div>
+                    </div>
+                    <div id="content-skills" class="section-content">
+                        <div class="form-group">
+                            <label for="app-skills-input" class="form-label">
+                                Relevant Skills
+                                <span class="prefilled-badge"><i class="fas fa-check-circle"></i> Initial skills pre-filled</span>
+                            </label>
+                            <div class="tags-input-wrapper">
+                                <div class="tags-container" onclick="this.querySelector('.tags-input').focus()">
+                                    <span class="tag">UX Design <span class="tag-remove" title="Remove skill">×</span></span>
+                                    <span class="tag">UI Design <span class="tag-remove" title="Remove skill">×</span></span>
+                                    <span class="tag">Figma <span class="tag-remove" title="Remove skill">×</span></span>
+                                    <span class="tag">Sketch <span class="tag-remove" title="Remove skill">×</span></span>
+                                    <span class="tag">User Research <span class="tag-remove" title="Remove skill">×</span></span>
+                                    <span class="tag">Prototyping <span class="tag-remove" title="Remove skill">×</span></span>
+                                    <span class="tag">Usability Testing <span class="tag-remove" title="Remove skill">×</span></span>
+                                    <span class="tag">Information Architecture <span class="tag-remove" title="Remove skill">×</span></span>
+                                    <span class="tag">Wireframing <span class="tag-remove" title="Remove skill">×</span></span>
+                                    <span class="tag">Design Systems <span class="tag-remove" title="Remove skill">×</span></span>
+                                    <span class="tag">Accessibility (WCAG) <span class="tag-remove" title="Remove skill">×</span></span>
+                                    <span class="tag">User Journey Mapping <span class="tag-remove" title="Remove skill">×</span></span>
+                                    <input type="text" class="tags-input" id="app-skills-input" placeholder="Add a skill...">
+                                </div>
+                            </div>
+                            <input type="hidden" id="app-skills" name="skills" value="UX Design, UI Design, Figma, Sketch, User Research, Prototyping, Usability Testing, Information Architecture, Wireframing, Design Systems, Accessibility (WCAG), User Journey Mapping">
+                            <small class="form-helper">Enter relevant skills. Press Enter or comma to add a skill.</small>
+                            <div class="validation-error" data-validation-for="skills"></div>
+                        </div>
+
+                        <div class="ai-assistant mb-4">
+                            <div class="ai-assistant-header">
+                                <i class="bi bi-robot"></i> AI Skill Suggestions
+                            </div>
+                            <p class="mb-2 small">Based on the "Senior UX Designer" role at Salesforce, consider adding:</p>
+                            <div class="d-flex flex-wrap gap-2">
+                                <button type="button" class="btn btn-sm btn-outline-secondary ai-add-skill">Data Visualization</button>
+                                <button type="button" class="btn btn-sm btn-outline-secondary ai-add-skill">Interaction Design</button>
+                                <button type="button" class="btn btn-sm btn-outline-secondary ai-add-skill">UX Writing</button>
+                                <button type="button" class="btn btn-sm btn-outline-secondary ai-add-skill">Responsive Design</button>
+                                <button type="button" class="btn btn-sm btn-outline-secondary ai-add-skill">Design Thinking</button>
+                                <button type="button" class="btn btn-sm btn-outline-secondary ai-add-skill">A/B Testing</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="app-portfolio" class="form-label">
+                                Portfolio Link (URL)
+                                <span class="prefilled-badge"><i class="fas fa-check-circle"></i></span>
+                            </label>
+                            <input type="url" id="app-portfolio" name="portfolioLink" class="form-control prefilled" value="https://davidjoyner.design" placeholder="https://yourportfolio.com">
+                            <small class="form-helper">Link to your online portfolio (e.g., personal website, Behance, Dribbble).</small>
+                            <div class="validation-error" data-validation-for="portfolioLink"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="application-section card required" id="documents-section" data-section="documents">
+                    <div class="section-header" role="button" aria-expanded="false" aria-controls="content-documents">
+                        <div class="section-title">
+                            <i class="bi bi-file-earmark-text icon"></i>
+                            <h3>Attach Documents</h3>
+                            <span class="required-indicator">*</span>
+                        </div>
+                        <div class="section-status">
+                            <div class="status-indicator complete" data-status="complete"></div>
+                            <span class="status-text">Complete</span>
+                            <button type="button" class="toggle-section" aria-label="Expand Documents Section"><i class="bi bi-chevron-down"></i></button>
+                        </div>
+                    </div>
+                    <div id="content-documents" class="section-content">
+                        <p class="form-helper mb-3">Select documents from your profile to attach. Ensure your resume is selected. Check job description for other required documents.</p>
+                        <div class="document-locker-integration">
+                            <h5 class="mb-3 fs-6 fw-semibold">Available Documents</h5>
+                            <div id="app-document-list" class="document-selection-grid">
+                                <div class="doc-select-item" for="doc-select-1">
+                                    <input class="form-check-input" type="checkbox" id="doc-select-1" name="selectedDocs" value="1" checked>
+                                    <label class="form-check-label w-100" for="doc-select-1">
+                                        <i class="bi bi-file-earmark-pdf text-danger"></i>
+                                        <div class="doc-info">
+                                            <span>David_Joyner_Resume_2024.pdf</span>
+                                            <small>Resume (290 KB, Updated Apr 1, 2024)</small>
+                                        </div>
+                                    </label>
+                                </div>
+                                <div class="doc-select-item" for="doc-select-2">
+                                    <input class="form-check-input" type="checkbox" id="doc-select-2" name="selectedDocs" value="2" checked>
+                                    <label class="form-check-label w-100" for="doc-select-2">
+                                        <i class="bi bi-file-earmark-word text-primary"></i>
+                                        <div class="doc-info">
+                                            <span>UX_Designer_Cover_Letter_Salesforce.docx</span>
+                                             <small>Cover Letter (124 KB, Updated Apr 5, 2024)</small>
+                                        </div>
+                                    </label>
+                                </div>
+                                <div class="doc-select-item" for="doc-select-3">
+                                    <input class="form-check-input" type="checkbox" id="doc-select-3" name="selectedDocs" value="3">
+                                     <label class="form-check-label w-100" for="doc-select-3">
+                                         <i class="bi bi-file-earmark-pdf text-danger"></i>
+                                         <div class="doc-info">
+                                            <span>UX_Portfolio_Highlights_2024.pdf</span>
+                                            <small>Portfolio Sample (4.2 MB, Updated Mar 15, 2024)</small>
+                                         </div>
+                                    </label>
+                                </div>
+                                 <div class="doc-select-item" for="doc-select-4">
+                                    <input class="form-check-input" type="checkbox" id="doc-select-4" name="selectedDocs" value="4">
+                                    <label class="form-check-label w-100" for="doc-select-4">
+                                        <i class="bi bi-file-earmark-zip text-success"></i>
+                                        <div class="doc-info">
+                                            <span>Design_Certificates.zip</span>
+                                            <small>Certificates (1.8 MB, Updated Feb 10, 2024)</small>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                             <div class="validation-error mt-2" data-validation-for="selectedDocs"></div>
+
+                            <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center mt-4 gap-2">
+                                <p class="mb-0 form-helper">Need to add or manage documents? <a href="profile.html#document-locker" target="_blank" class="link-primary">Go to Profile Documents <i class="bi bi-box-arrow-up-right small"></i></a></p>
+                                <button type="button" class="btn btn-outline-primary btn-sm">
+                                    <i class="bi bi-upload me-1"></i> Upload New Document
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="contextual-hint tip mt-4">
+                            <i class="bi bi-lightbulb-fill"></i>
+                            <div>
+                                <strong>Tip:</strong> Your resume and a cover letter are selected. Consider attaching the Portfolio PDF if relevant to this specific role's requirements.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="application-section card optional" id="cover-letter-section" data-section="cover-letter">
+                    <div class="section-header" role="button" aria-expanded="false" aria-controls="content-cover-letter">
+                        <div class="section-title">
+                            <i class="bi bi-envelope icon"></i>
+                            <h3>Cover Letter</h3>
+                        </div>
+                        <div class="section-status">
+                            <div class="status-indicator incomplete" data-status="incomplete"></div>
+                            <span class="status-text">In Progress</span>
+                            <button type="button" class="toggle-section" aria-label="Expand Cover Letter Section"><i class="bi bi-chevron-down"></i></button>
+                        </div>
+                    </div>
+                    <div id="content-cover-letter" class="section-content">
+                        <p class="form-helper mb-3">Paste your cover letter text below, OR ensure a cover letter document is selected in the 'Documents' section above. If both are provided, the attached document usually takes precedence.</p>
+
+                        <div class="alert alert-info d-flex align-items-center p-2 px-3 small" role="alert">
+                            <i class="bi bi-info-circle-fill me-2 flex-shrink-0"></i>
+                            <div>A cover letter document (<strong>UX_Designer_Cover_Letter_Salesforce.docx</strong>) is currently selected in the Documents section.</div>
+                        </div>
+
+                        <div class="form-group mt-3">
+                            <label for="app-cover-letter" class="form-label">Paste Cover Letter Text (Optional)</label>
+                            <textarea id="app-cover-letter" name="coverLetter" class="form-control" rows="10">Dear Salesforce Design Team,
+
+I am writing to express my enthusiastic interest in the Senior UX Designer position advertised on the Salesforce Careers website. With over 7 years of experience crafting user-centered digital experiences, particularly within complex domains like educational technology, I am confident that my skills and passion for intuitive design align perfectly with Salesforce's mission and values.
+
+In my previous roles at the Georgia Tech Research Institute and the College of Computing, I have led design initiatives from conception through execution. My work involved extensive user research, iterative prototyping, usability testing, and collaboration with cross-functional teams, resulting in measurable improvements in user satisfaction and task completion rates (e.g., a 35% increase in user satisfaction for a redesigned educational platform). My Ph.D. in Human-Centered Computing provides a strong theoretical foundation for my practical design work.
+
+Salesforce's dedication to solving complex problems through elegant and accessible design is something I deeply admire. I am particularly impressed by the continuous refinement of Salesforce Workspace tools, managing to integrate powerful features while maintaining a clean and efficient user experience. This commitment to user needs at scale resonates strongly with my own design philosophy.
+
+My expertise in design systems, information architecture, accessibility standards (WCAG), and data-informed design processes makes me well-suited to contribute effectively to your team. I am eager to bring my experience to Salesforce and help shape products that impact millions globally.
+
+Thank you for considering my application. I have attached my resume and portfolio for your review and welcome the opportunity to discuss my qualifications further.
+
+Sincerely,
+David Joyner</textarea>
+                            <div class="validation-error" data-validation-for="coverLetter"></div>
+                        </div>
+
+                        <div class="ai-assistant mt-4">
+                            <div class="ai-assistant-header">
+                                <i class="bi bi-robot"></i> AI Cover Letter Assistant
+                            </div>
+                            <p class="mb-2 small">Need help refining your letter or starting from scratch? Our AI can generate a draft based on your profile and this job description.</p>
+                            <div class="d-grid">
+                                <button type="button" id="generate-cover-letter-btn" class="btn btn-outline-primary btn-sm">
+                                    <i class="bi bi-magic me-1"></i> Generate / Refine Cover Letter Draft
+                                </button>
+                            </div>
+                            <div id="ai-cover-letter-output" class="ai-suggestion mt-3" style="display: none;"></div>
+                        </div>
+
+                        <div class="contextual-hint suggestion mt-4">
+                            <i class="bi bi-chat-text-fill"></i>
+                            <div>
+                                <strong>Suggestion:</strong> Tailor the pasted text (or your attached letter) specifically to Salesforce and the Senior UX Designer role. Mentioning a specific Salesforce product you admire or find challenging can show genuine interest.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="application-section card optional" id="questions-section" data-section="questions">
+                    <div class="section-header" role="button" aria-expanded="false" aria-controls="content-questions">
+                        <div class="section-title">
+                            <i class="bi bi-question-circle-fill icon"></i>
+                            <h3>Additional Questions</h3>
+                        </div>
+                        <div class="section-status">
+                            <div class="status-indicator incomplete" data-status="incomplete"></div>
+                            <span class="status-text">Not Started</span>
+                            <button type="button" class="toggle-section" aria-label="Expand Additional Questions Section"><i class="bi bi-chevron-down"></i></button>
+                        </div>
+                    </div>
+                    <div id="content-questions" class="section-content">
+                        <p class="form-helper mb-4">Please answer the following questions required by the employer. Fields marked with <span class="required-marker">*</span> are mandatory.</p>
+
+                        <div class="form-group">
+                            <label for="app-q-salary" class="form-label">What is your desired salary range? <span class="required-marker">*</span></label>
+                            <input type="text" id="app-q-salary" name="desiredSalary" class="form-control" placeholder="e.g., $130,000 - $160,000 per year" required>
+                            <div class="validation-error" data-validation-for="desiredSalary"></div>
+
+                            <div class="ai-assistant mt-3 p-3" style="font-size: 0.85rem;">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <div class="fw-semibold"><i class="bi bi-graph-up me-1"></i> Salary Insights (AI Estimate)</div>
+                                    <span class="badge bg-light text-dark border">For Sr. UX Designer, Salesforce, Mtn View</span>
+                                </div>
+                                <ul class="small mb-0 ps-3">
+                                    <li>Typical Base Range: $135,000 - $175,000 USD</li>
+                                    <li>Total Comp (incl. bonus/stock) may be higher.</li>
+                                    <li>Consider your experience level within the 'Senior' band.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="app-q-startdate" class="form-label">What is your earliest available start date? <span class="required-marker">*</span></label>
+                            <input type="date" id="app-q-startdate" name="startDate" class="form-control" required>
+                             <div class="validation-error" data-validation-for="startDate"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="app-q-referral" class="form-label">How did you hear about this position?</label>
+                            <select id="app-q-referral" name="referralSource" class="form-select">
+                                <option value="" selected>-- Please select --</option>
+                                <option value="company-website">Salesforce Careers Website</option>
+                                <option value="linkedin">LinkedIn</option>
+                                <option value="employee-referral">Employee Referral</option>
+                                <option value="job-board">Other Job Board (Indeed, Glassdoor, etc.)</option>
+                                <option value="conference-event">Conference or Event</option>
+                                <option value="recruiter">Recruiter Contact</option>
+                                <option value="other">Other</option>
+                            </select>
+                             <div class="validation-error" data-validation-for="referralSource"></div>
+                        </div>
+
+                         <div class="form-group">
+                            <label for="custom-q1" class="form-label">Please describe a challenging UX problem you solved and your approach. <span class="required-marker">*</span></label>
+                            <textarea id="custom-q1" name="customQuestion1" class="form-control" rows="5" placeholder="Briefly outline the Situation, your Task, the Actions you took (research, design, testing), and the Result..." required></textarea>
+                            <div class="validation-error" data-validation-for="customQuestion1"></div>
+                            <div class="contextual-hint info mt-2">
+                                <i class="bi bi-info-circle-fill"></i>
+                                <div><strong>Tip:</strong> Focus on a project relevant to Salesforce's scale or domain. Use the STAR method (Situation, Task, Action, Result) for structure. Quantify results if possible.</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="custom-q2" class="form-label">What Salesforce product's user experience would you improve, and how? <span class="required-marker">*</span></label>
+                            <textarea id="custom-q2" name="customQuestion2" class="form-control" rows="5" placeholder="Identify a specific Salesforce product and a user pain point or opportunity. Briefly propose your UX solution and rationale..." required></textarea>
+                            <div class="validation-error" data-validation-for="customQuestion2"></div>
+                        </div>
+
+                        <fieldset class="form-group border p-3 rounded">
+                             <legend class="form-label w-auto fs-6 px-2">Work Authorization <span class="required-marker">*</span></legend>
+                            <div class="form-group mb-3">
+                                <label class="form-label small mb-1">Are you legally authorized to work in the United States?</label>
+                                <div class="radio-group">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="workAuthorization" id="authYes" value="yes" required>
+                                        <label class="form-check-label" for="authYes"> Yes</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="workAuthorization" id="authNo" value="no">
+                                        <label class="form-check-label" for="authNo"> No</label>
+                                    </div>
+                                </div>
+                                <div class="validation-error" data-validation-for="workAuthorization"></div>
+                            </div>
+
+                            <div class="form-group mb-0">
+                                 <label class="form-label small mb-1">Will you now or in the future require sponsorship for employment visa status (e.g., H-1B visa)?</label>
+                                <div class="radio-group">
+                                     <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="visaRequired" id="visaYes" value="yes" required>
+                                        <label class="form-check-label" for="visaYes"> Yes</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="visaRequired" id="visaNo" value="no">
+                                        <label class="form-check-label" for="visaNo"> No</label>
+                                    </div>
+                                </div>
+                                <div class="validation-error" data-validation-for="visaRequired"></div>
+                            </div>
+                         </fieldset>
+                    </div>
+                </div>
+
+                <div class="submit-section card card-body border-top border-3 border-primary shadow-sm">
+                     <h4 class="mb-3">Ready to Submit?</h4>
+                     <p class="text-muted">Please review all sections for accuracy and completeness before submitting your application.</p>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                        <button type="button" id="save-draft-btn" class="btn btn-outline-secondary">
+                            <i class="bi bi-bookmark me-1"></i> Save Draft & Close
+                        </button>
+                        <button type="submit" id="submit-application-btn" class="btn btn-success btn-lg">
+                            <i class="bi bi-send-fill me-1"></i> Submit Application
+                        </button>
+                    </div>
+                    <p class="submit-note mt-3"><small>Your progress is automatically saved periodically.</small></p>
+                </div>
+            </form>
+        </main>
+
+        <footer class="bg-light py-3 border-top mt-auto">
+            <div class="container">
+                <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center text-center text-sm-start">
+                    <p class="mb-2 mb-sm-0 text-muted">&copy; 2024 Applicant Portal Inc.</p>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-muted text-decoration-none">Privacy</a>
+                        <a href="#" class="text-muted text-decoration-none">Terms</a>
+                        <a href="#" class="text-muted text-decoration-none">Help</a>
+                    </div>
                 </div>
             </div>
+        </footer>
+    </div>
 
-            <!-- Submit Button -->
-            <div style="margin-top: 2.5rem; text-align: center; border-top: 1px solid #eee; padding-top: 1.5rem;">
-                <button type="submit" id="submit-application-btn" class="btn btn-success btn-large">Submit Application</button>
-                <p style="margin-top: 1rem;"><small class="text-muted">You can save progress by leaving the page (auto-save is enabled) and return later via the Dashboard.</small></p>
+    <template id="work-experience-template">
+        <div class="dynamic-list-item experience-item card-nested">
+            <button type="button" class="remove-item-btn" title="Remove Experience"><i class="bi bi-x-lg"></i></button>
+            <div class="form-row">
+                <div class="form-group form-column">
+                    <label class="form-label">Job Title <span class="required-marker">*</span></label>
+                    <input type="text" name="jobTitle" class="form-control" required>
+                    <div class="validation-error"></div>
+                </div>
+                <div class="form-group form-column">
+                    <label class="form-label">Company <span class="required-marker">*</span></label>
+                    <input type="text" name="company" class="form-control" required>
+                    <div class="validation-error"></div>
+                </div>
             </div>
-
-        </form>
-
-    </main>
-
-    <footer>
-        <p>Team Project - Final Prototype</p>
-    </footer>
-
-    <!-- TEMPLATES for Dynamic Lists (Can be reused from profile if identical) -->
-     <template id="work-experience-template">
-        <div class="experience-item">
-            <button type="button" class="btn btn-danger btn-small remove-item-btn" title="Remove Experience">&times;</button>
-            <div class="form-group">
-                <label for="jobTitle" class="required">Job Title</label>
-                <input type="text" name="jobTitle" required>
+            <div class="form-row">
+                <div class="form-group form-column">
+                    <label class="form-label">Duration</label>
+                    <input type="text" name="duration" class="form-control" placeholder="e.g., Jan 2021 - Present or May 2020 - Aug 2020">
+                </div>
+                <div class="form-group form-column">
+                    <label class="form-label">Location (Optional)</label>
+                    <input type="text" name="location" class="form-control" placeholder="e.g., Remote or City, State">
+                </div>
             </div>
-            <div class="form-group">
-                <label for="company" class="required">Company</label>
-                <input type="text" name="company" required>
-            </div>
-            <div class="form-group">
-                <label for="duration">Duration</label>
-                <input type="text" name="duration" placeholder="e.g., Jan 2021 - Present">
-            </div>
-            <div class="form-group">
-                <label for="description">Description / Responsibilities</label>
-                <textarea name="description" rows="3" placeholder="Key responsibilities/achievements relevant to this application"></textarea>
+            <div class="form-group mb-0">
+                <label class="form-label">Description / Responsibilities (Optional)</label>
+                <textarea name="description" class="form-control" rows="3" placeholder="Key responsibilities/achievements relevant to this application"></textarea>
             </div>
         </div>
     </template>
 
     <template id="education-template">
-        <div class="education-item">
-             <button type="button" class="btn btn-danger btn-small remove-item-btn" title="Remove Education">&times;</button>
-             <div class="form-group">
-                <label for="institution" class="required">Institution</label>
-                <input type="text" name="institution" required>
+        <div class="dynamic-list-item education-item card-nested">
+            <button type="button" class="remove-item-btn" title="Remove Education"><i class="bi bi-x-lg"></i></button>
+            <div class="form-row">
+                <div class="form-group form-column">
+                    <label class="form-label">Institution <span class="required-marker">*</span></label>
+                    <input type="text" name="institution" class="form-control" required>
+                    <div class="validation-error"></div>
+                </div>
+                <div class="form-group form-column">
+                    <label class="form-label">Degree / Field of Study</label>
+                    <input type="text" name="degree" class="form-control" placeholder="e.g., B.S. Computer Science">
+                </div>
             </div>
-            <div class="form-group">
-                <label for="degree">Degree / Field of Study</label>
-                <input type="text" name="degree">
+            <div class="form-row">
+                <div class="form-group form-column">
+                    <label class="form-label">Duration / Graduation Date</label>
+                    <input type="text" name="eduDuration" class="form-control" placeholder="e.g., Aug 2018 - May 2022">
+                </div>
+                <div class="form-group form-column">
+                    <label class="form-label">Location (Optional)</label>
+                    <input type="text" name="eduLocation" class="form-control" placeholder="e.g., City, State">
+                </div>
             </div>
-            <div class="form-group">
-                <label for="eduDuration">Duration / Graduation Date</label>
-                <input type="text" name="eduDuration">
+             <div class="form-group mb-0">
+                <label class="form-label">Description / Activities (Optional)</label>
+                <textarea name="eduDescription" class="form-control" rows="3" placeholder="Relevant coursework, honors, activities"></textarea>
             </div>
         </div>
     </template>
 
-    <!-- Load Scripts -->
-    <script src="js/data.js"></script>
-    <script src="js/main.js"></script>
+    <!-- Bootstrap JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Application JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            // --- Section Expand/Collapse Logic ---
+            const sectionHeaders = document.querySelectorAll('.section-header');
+            sectionHeaders.forEach(header => {
+                const section = header.closest('.application-section');
+                const content = section.querySelector('.section-content');
+                const toggleBtn = header.querySelector('.toggle-section');
+                const icon = toggleBtn.querySelector('i');
+
+                // Initial state based on 'open' class
+                if (content.classList.contains('open')) {
+                    toggleBtn.classList.add('expanded');
+                    icon.classList.remove('bi-chevron-down');
+                    icon.classList.add('bi-chevron-up');
+                    header.setAttribute('aria-expanded', 'true');
+                } else {
+                     toggleBtn.classList.remove('expanded');
+                     icon.classList.remove('bi-chevron-up');
+                     icon.classList.add('bi-chevron-down');
+                     header.setAttribute('aria-expanded', 'false');
+                }
+
+                header.addEventListener('click', function(e) {
+                    // Prevent toggling if click is on the status indicator or button itself
+                    if (e.target.closest('.section-status') && !e.target.closest('.toggle-section')) {
+                        return;
+                    }
+
+                    const isOpen = content.classList.toggle('open');
+                    toggleBtn.classList.toggle('expanded', isOpen);
+                    header.setAttribute('aria-expanded', isOpen);
+
+                    if (isOpen) {
+                        icon.classList.remove('bi-chevron-down');
+                        icon.classList.add('bi-chevron-up');
+                        toggleBtn.setAttribute('aria-label', `Collapse ${section.querySelector('h3').textContent} Section`);
+                        // Ensure border is added correctly on expand
+                        section.style.borderBottom = ''; // Reset potential inline style if needed
+                    } else {
+                         icon.classList.remove('bi-chevron-up');
+                         icon.classList.add('bi-chevron-down');
+                        toggleBtn.setAttribute('aria-label', `Expand ${section.querySelector('h3').textContent} Section`);
+                        // Optionally remove bottom border immediately for visual feedback
+                         // section.style.borderBottom = 'none'; // May cause jumpiness
+                    }
+                });
+            });
+
+            // --- Section Navigation Logic ---
+            const sectionNavItems = document.querySelectorAll('.section-nav-item');
+            sectionNavItems.forEach(navItem => {
+                navItem.addEventListener('click', function() {
+                    const sectionId = this.dataset.section;
+                    const targetSection = document.getElementById(`${sectionId}-section`);
+                    if (!targetSection) return;
+
+                    sectionNavItems.forEach(item => item.classList.remove('active'));
+                    this.classList.add('active');
+
+                    const targetContent = targetSection.querySelector('.section-content');
+                    const targetHeader = targetSection.querySelector('.section-header');
+                    const targetToggleBtn = targetHeader.querySelector('.toggle-section');
+                    const targetIcon = targetToggleBtn.querySelector('i');
+
+                    if (!targetContent.classList.contains('open')) {
+                        targetContent.classList.add('open');
+                        targetToggleBtn.classList.add('expanded');
+                        targetHeader.setAttribute('aria-expanded', 'true');
+                        targetIcon.classList.remove('bi-chevron-down');
+                        targetIcon.classList.add('bi-chevron-up');
+                        targetToggleBtn.setAttribute('aria-label', `Collapse ${targetSection.querySelector('h3').textContent} Section`);
+                    }
+
+                    targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                     // Add slight highlight animation
+                    targetSection.style.transition = 'box-shadow 0.5s ease-out';
+                    targetSection.style.boxShadow = '0 0 0 2px var(--primary-light)';
+                    setTimeout(() => {
+                        targetSection.style.boxShadow = 'var(--shadow)';
+                    }, 600);
+
+                });
+            });
+
+            // --- Dynamic List Item Logic (Add/Remove) ---
+            function setupDynamicList(listId, templateId, addButtonClass) {
+                const container = document.getElementById(listId);
+                const template = document.getElementById(templateId);
+                const addButton = document.querySelector(`.${addButtonClass}`);
+                if (!container || !template || !addButton) return;
+
+                // Add item
+                addButton.addEventListener('click', function() {
+                    const clone = document.importNode(template.content, true);
+                    const newItem = clone.querySelector('.dynamic-list-item');
+
+                    // Add remove listener to the new item
+                    newItem.querySelector('.remove-item-btn').addEventListener('click', function() {
+                        newItem.remove();
+                        updateSectionStatus(container.closest('.application-section'));
+                    });
+
+                    // Add prefilled badges if applicable (example for new items - likely not needed for 'new' ones)
+                    // newItem.querySelectorAll('label').forEach(label => { // Example logic
+                    //     if (label.textContent.includes('Title')) {
+                    //         // add badge if needed
+                    //     }
+                    // });
+
+                    container.appendChild(clone);
+                    newItem.querySelector('input, textarea')?.focus(); // Focus first input
+                    updateSectionStatus(container.closest('.application-section'));
+                });
+
+                // Add remove listener to existing items
+                container.querySelectorAll('.dynamic-list-item').forEach(item => {
+                    item.querySelector('.remove-item-btn')?.addEventListener('click', function() {
+                        item.remove();
+                         updateSectionStatus(container.closest('.application-section'));
+                    });
+                });
+            }
+
+            setupDynamicList('app-work-experience-list', 'work-experience-template', 'add-app-experience-btn');
+            setupDynamicList('app-education-list', 'education-template', 'add-app-education-btn');
+
+
+             // --- Skills Tag Input Logic ---
+             const tagsContainer = document.querySelector('.tags-container');
+             const tagsInput = document.querySelector('.tags-input');
+             const hiddenSkillsInput = document.getElementById('app-skills');
+
+             function renderTags() {
+                 // Clear existing tags except input
+                 tagsContainer.querySelectorAll('.tag').forEach(tagEl => tagEl.remove());
+                 const skills = hiddenSkillsInput.value.split(',').map(s => s.trim()).filter(s => s);
+
+                 skills.forEach(skill => {
+                     const tagEl = document.createElement('span');
+                     tagEl.className = 'tag';
+                     tagEl.innerHTML = `${skill} <span class="tag-remove" title="Remove skill">×</span>`;
+                     tagEl.querySelector('.tag-remove').addEventListener('click', (e) => {
+                         e.stopPropagation(); // Prevent container click focus
+                         removeSkill(skill);
+                     });
+                     tagsContainer.insertBefore(tagEl, tagsInput);
+                 });
+             }
+
+             function addSkill(skill) {
+                 skill = skill.trim();
+                 if (!skill || hiddenSkillsInput.value.split(',').map(s => s.trim().toLowerCase()).includes(skill.toLowerCase())) {
+                     return; // Prevent duplicates or empty
+                 }
+                 const currentSkills = hiddenSkillsInput.value.split(',').map(s => s.trim()).filter(s => s);
+                 currentSkills.push(skill);
+                 hiddenSkillsInput.value = currentSkills.join(', ');
+                 renderTags();
+             }
+
+             function removeSkill(skill) {
+                 let currentSkills = hiddenSkillsInput.value.split(',').map(s => s.trim()).filter(s => s);
+                 currentSkills = currentSkills.filter(s => s.toLowerCase() !== skill.toLowerCase());
+                 hiddenSkillsInput.value = currentSkills.join(', ');
+                 renderTags();
+             }
+
+             tagsInput?.addEventListener('keydown', (e) => {
+                 if (e.key === 'Enter' || e.key === ',') {
+                     e.preventDefault();
+                     addSkill(tagsInput.value);
+                     tagsInput.value = '';
+                 } else if (e.key === 'Backspace' && tagsInput.value === '') {
+                     // Remove last tag on backspace if input is empty
+                     const lastTag = tagsContainer.querySelector('.tag:last-of-type');
+                     if (lastTag) {
+                         removeSkill(lastTag.textContent.replace('×','').trim());
+                     }
+                 }
+             });
+
+             tagsInput?.addEventListener('blur', () => { // Add tag on blur if there's text
+                 if (tagsInput.value.trim()) {
+                     addSkill(tagsInput.value);
+                     tagsInput.value = '';
+                 }
+             });
+
+             // Add skill from AI buttons
+             document.querySelectorAll('.ai-add-skill').forEach(btn => {
+                 btn.addEventListener('click', () => {
+                     addSkill(btn.textContent.trim());
+                      tagsInput?.focus(); // Keep focus in the input area
+                 });
+             });
+
+             renderTags(); // Initial render
+
+            // --- Autosave Simulation ---
+            const lastSavedTimeEl = document.getElementById('last-saved-time');
+            let autosaveInterval;
+
+            function simulateAutosave() {
+                const now = new Date();
+                const hours = now.getHours();
+                const minutes = now.getMinutes();
+                const ampm = hours >= 12 ? 'PM' : 'AM';
+                const formattedHours = hours % 12 || 12;
+                const formattedMinutes = minutes.toString().padStart(2, '0');
+                if(lastSavedTimeEl) {
+                     lastSavedTimeEl.textContent = `${formattedHours}:${formattedMinutes} ${ampm}`;
+                }
+                updateProgress(1); // Increment progress slightly on save
+            }
+
+            autosaveInterval = setInterval(simulateAutosave, 45000); // Autosave every 45 seconds
+            setTimeout(simulateAutosave, 3000); // Initial save soon after load
+
+            // --- Progress Bar Update ---
+            const progressBar = document.getElementById('application-progress');
+            const progressPercentage = document.getElementById('progress-percentage');
+
+            function updateProgress(increment = 0) {
+                 if (!progressBar || !progressPercentage) return;
+
+                 // Simple progress calculation (example: based on completed sections)
+                 const sections = document.querySelectorAll('.application-section');
+                 const completedSections = document.querySelectorAll('.application-section .status-indicator.complete');
+                 let currentProgress = sections.length > 0 ? Math.round((completedSections.length / sections.length) * 100) : 0;
+
+                 // Add random increment if passed
+                 currentProgress = Math.min(currentProgress + increment, 100);
+
+                 progressBar.style.width = `${currentProgress}%`;
+                 progressBar.setAttribute('aria-valuenow', currentProgress);
+                 progressPercentage.textContent = `${currentProgress}% Complete`;
+            }
+             updateProgress(); // Initial call
+
+
+            // --- Section Status Update Logic ---
+            function updateSectionStatus(sectionElement) {
+                 if (!sectionElement) return;
+                 const statusIndicator = sectionElement.querySelector('.status-indicator');
+                 const statusText = sectionElement.querySelector('.status-text');
+                 let isComplete = true; // Assume complete initially
+
+                 // Check required inputs within the section
+                 sectionElement.querySelectorAll('input[required], textarea[required], select[required]').forEach(input => {
+                     if (!input.value.trim()) {
+                          // Special check for radio buttons
+                         if (input.type === 'radio') {
+                             const radioGroup = sectionElement.querySelectorAll(`input[name="${input.name}"]`);
+                             const isChecked = Array.from(radioGroup).some(radio => radio.checked);
+                             if (!isChecked) isComplete = false;
+                         } else {
+                             isComplete = false;
+                         }
+                     }
+                 });
+
+                 // Special check for dynamic lists (e.g., experience needs at least one)
+                 if (sectionElement.id === 'work-experience-section') {
+                    if (sectionElement.querySelectorAll('.experience-item').length === 0) {
+                        isComplete = false;
+                    }
+                 }
+                  // Special check for documents (assuming resume is required)
+                 if (sectionElement.id === 'documents-section') {
+                    const resumeCheckbox = sectionElement.querySelector('#doc-select-1'); // Assuming ID 1 is resume
+                    if (!resumeCheckbox || !resumeCheckbox.checked) {
+                        // isComplete = false; // Requirement might vary - keep simple for now
+                    }
+                     // More generally, check if *at least one* doc is checked if section is required
+                     const anyDocChecked = Array.from(sectionElement.querySelectorAll('input[name="selectedDocs"]')).some(cb => cb.checked);
+                     if (!anyDocChecked && sectionElement.classList.contains('required')) {
+                         isComplete = false;
+                     }
+                 }
+
+
+                 if (isComplete) {
+                     statusIndicator.className = 'status-indicator complete';
+                     statusIndicator.setAttribute('data-status', 'complete');
+                     statusIndicator.innerHTML = '✓';
+                     statusText.textContent = 'Complete';
+                 } else {
+                     statusIndicator.className = 'status-indicator incomplete';
+                     statusIndicator.setAttribute('data-status', 'incomplete');
+                     statusIndicator.innerHTML = '•';
+                     // Determine if "In Progress" (some fields filled) or "Not Started"
+                     let hasInput = Array.from(sectionElement.querySelectorAll('input, textarea, select')).some(el => el.value.trim() !== '');
+                     statusText.textContent = hasInput ? 'In Progress' : 'Not Started';
+                 }
+                 updateProgress(); // Update overall progress bar
+            }
+
+            // Add listeners to update status on input change
+            document.querySelectorAll('.application-section input, .application-section textarea, .application-section select')
+                .forEach(input => {
+                    input.addEventListener('input', (e) => {
+                         updateSectionStatus(e.target.closest('.application-section'));
+                         // Clear validation error on input
+                         const formGroup = e.target.closest('.form-group, fieldset');
+                         const errorDiv = formGroup?.querySelector('.validation-error');
+                         if (errorDiv) errorDiv.textContent = '';
+                         // Clear global validation summary if it's visible
+                         document.getElementById('validation-summary').style.display = 'none';
+
+                    });
+                     input.addEventListener('change', (e) => { // For selects, checkboxes, radios
+                         updateSectionStatus(e.target.closest('.application-section'));
+                     });
+                });
+
+             // Initial status check for all sections
+             document.querySelectorAll('.application-section').forEach(section => updateSectionStatus(section));
+
+
+            // --- AI Cover Letter Generator ---
+            const generateBtn = document.getElementById('generate-cover-letter-btn');
+            const coverLetterTextarea = document.getElementById('app-cover-letter');
+            const aiOutputDiv = document.getElementById('ai-cover-letter-output');
+
+            generateBtn?.addEventListener('click', function() {
+                const originalContent = this.innerHTML;
+                this.disabled = true;
+                this.innerHTML = '<span class="spinner"></span> Generating...';
+                aiOutputDiv.style.display = 'none'; // Hide previous output
+
+                setTimeout(() => {
+                    const jobTitle = "Senior UX Designer";
+                    const company = "Salesforce";
+                    const name = document.getElementById('app-name')?.value || "David Joyner";
+                    const existingText = coverLetterTextarea.value;
+
+                    // Very basic "AI" generation
+                    let aiGeneratedLetter = `Dear ${company} Hiring Team,\n\nI am writing to express my strong interest in the ${jobTitle} position. Based on my profile and experience, particularly in [Mention a key experience area from profile, e.g., Human-Centered Computing or leading design projects], I am confident I possess the skills necessary to excel in this role and contribute significantly to ${company}.\n\n[AI would ideally elaborate here based on resume/job desc matching - simplified example follows]\nMy background includes extensive work in user research, prototyping, and design systems, aligning well with the requirements outlined. I admire ${company}'s commitment to [Mention a known Salesforce value, e.g., user focus or innovation] and am eager to apply my expertise to your impactful products.\n\n${existingText ? 'Building upon my previous draft:\n' + existingText + '\n\nI believe...' : 'I am excited about the opportunity...'}\n\nThank you for your time and consideration.\n\nSincerely,\n${name}`;
+
+                    coverLetterTextarea.value = aiGeneratedLetter; // Replace or append based on preference
+                    aiOutputDiv.textContent = "Draft generated! Review and edit as needed.";
+                    aiOutputDiv.style.display = 'block';
+
+                    this.disabled = false;
+                    this.innerHTML = originalContent;
+                    updateSectionStatus(this.closest('.application-section')); // Update status
+                }, 2500); // Simulate delay
+            });
+
+
+            // --- Form Validation on Submit ---
+             const form = document.getElementById('application-form');
+             const validationSummary = document.getElementById('validation-summary');
+             const validationList = document.getElementById('validation-list');
+
+             form.addEventListener('submit', function(e) {
+                 e.preventDefault();
+                 clearAllErrors();
+                 let isValid = true;
+                 let firstErrorElement = null;
+
+                 form.querySelectorAll('input[required], textarea[required], select[required]').forEach(input => {
+                     const section = input.closest('.application-section');
+                     const sectionVisible = section?.querySelector('.section-content').classList.contains('open');
+                     let fieldValid = true;
+
+                     // Basic empty check
+                     if (!input.value.trim()) {
+                          // Radio button check
+                         if (input.type === 'radio') {
+                             const radioGroup = form.querySelectorAll(`input[name="${input.name}"]`);
+                             if (!Array.from(radioGroup).some(radio => radio.checked)) {
+                                 fieldValid = false;
+                                 showError(input, 'Please select an option.');
+                             }
+                         } else {
+                              fieldValid = false;
+                              showError(input, 'This field is required.');
+                         }
+                     }
+                     // Add more specific validation (e.g., email format) if needed
+                     else if (input.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value)) {
+                         fieldValid = false;
+                         showError(input, 'Please enter a valid email address.');
+                     }
+                     else if (input.type === 'url' && input.value && !/^https?:\/\/.+/.test(input.value)) {
+                         fieldValid = false;
+                         showError(input, 'Please enter a valid URL (e.g., https://...).');
+                     }
+
+                     if (!fieldValid) {
+                         isValid = false;
+                         if (!firstErrorElement) {
+                              firstErrorElement = input;
+                              // Expand section if collapsed
+                             if (section && !sectionVisible) {
+                                 section.querySelector('.section-header').click();
+                             }
+                         }
+                     }
+                 });
+
+                 // Check document selection (example: require at least one)
+                 const docCheckboxes = form.querySelectorAll('input[name="selectedDocs"]');
+                 const documentsSection = form.querySelector('#documents-section');
+                 if (documentsSection.classList.contains('required') && !Array.from(docCheckboxes).some(cb => cb.checked)) {
+                      isValid = false;
+                      const docErrorDiv = documentsSection.querySelector('[data-validation-for="selectedDocs"]');
+                       if(docErrorDiv) docErrorDiv.textContent = 'Please select at least one document (e.g., Resume).';
+                      if (!firstErrorElement) firstErrorElement = docCheckboxes[0];
+                      if (!documentsSection.querySelector('.section-content').classList.contains('open')) {
+                            documentsSection.querySelector('.section-header').click();
+                      }
+                 }
+
+
+                 if (!isValid) {
+                     // Populate and show validation summary
+                     validationList.innerHTML = ''; // Clear previous summary errors
+                     form.querySelectorAll('.validation-error').forEach(errDiv => {
+                         if (errDiv.textContent) {
+                             const fieldLabel = errDiv.closest('.form-group, fieldset')?.querySelector('label, legend')?.textContent.replace('*','').trim() || 'A required field';
+                             const listItem = document.createElement('li');
+                             listItem.innerHTML = `<strong>${fieldLabel}:</strong> ${errDiv.textContent}`;
+                             validationList.appendChild(listItem);
+                         }
+                     });
+
+                     validationSummary.style.display = 'block';
+                     validationSummary.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      firstErrorElement?.focus();
+                 } else {
+                     // Validation passed - Simulate submission
+                     const submitButton = document.getElementById('submit-application-btn');
+                     submitButton.disabled = true;
+                     submitButton.innerHTML = '<span class="spinner"></span> Submitting...';
+
+                     console.log("Form data (simulated):", new FormData(form)); // Log data for demo
+
+                     // Simulate network delay
+                     setTimeout(() => {
+                         // Replace with actual redirect or success message
+                         alert('Application submitted successfully! (Simulation)');
+                         window.location.href = 'dashboard.html?submitted=true'; // Example redirect
+                     }, 1500);
+                 }
+             });
+
+             function showError(inputElement, message) {
+                 const formGroup = inputElement.closest('.form-group, fieldset'); // Handle fieldsets for radios
+                 if (!formGroup) return;
+                 let errorDiv = formGroup.querySelector(`.validation-error[data-validation-for="${inputElement.name}"]`);
+                 if (!errorDiv) { // Fallback for elements without specific error div
+                    errorDiv = formGroup.querySelector('.validation-error');
+                 }
+                 if (errorDiv) {
+                     errorDiv.textContent = message;
+                     inputElement.classList.add('is-invalid'); // Optional: Bootstrap invalid style
+                 }
+             }
+
+             function clearAllErrors() {
+                 form.querySelectorAll('.validation-error').forEach(el => el.textContent = '');
+                 form.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+                 validationSummary.style.display = 'none';
+                 validationList.innerHTML = '';
+             }
+
+            // --- Initialize Tooltips ---
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"], [title]'));
+            tooltipTriggerList.map(function (tooltipTriggerEl) {
+                // Don't init tooltip on elements that have other interactive components inside like the remove button
+                if (!tooltipTriggerEl.querySelector('[data-bs-toggle="tooltip"]') && !tooltipTriggerEl.classList.contains('remove-item-btn')) {
+                     return new bootstrap.Tooltip(tooltipTriggerEl)
+                }
+            });
+
+
+        });
+    </script>
+
 </body>
 </html>
